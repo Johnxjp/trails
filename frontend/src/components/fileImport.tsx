@@ -1,0 +1,71 @@
+
+import { useState } from "react";
+
+export function FileUploader() {
+    const [uploading, setUploading] = useState(false);
+    const [uploadComplete, setUploadComplete] = useState(false);
+    const [error, setError] = useState(null);
+
+    async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+
+        if (!file) return;
+
+        // Reset states
+        setError(null);
+        setUploadComplete(false);
+        setUploading(true);
+
+        try {
+            // Create FormData
+            const formData = new FormData();
+            formData.append('file', file);
+
+            // Make the upload request
+            const response = await fetch('http://localhost:8000/document/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error(`Upload failed with status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Upload successful:', result);
+            setUploadComplete(true);
+        } catch (err: any) {
+            console.error('Error uploading file:', err);
+            setError(err.message);
+        } finally {
+            setUploading(false);
+        }
+    };
+
+    return (
+        <div>
+            <input
+                type="file"
+                id="file-input"
+                className="hidden"
+                accept=".txt"
+                onChange={handleFileChange}
+            />
+
+            <button className="border rounded p-2 m-2 w-115 hover:cursor-pointer"
+                onClick={() => {
+                    const fileInput = document.getElementById('file-input')
+                    if (fileInput) {
+                        (fileInput as HTMLInputElement).click();
+                    }
+                }}
+                disabled={uploading}
+            >
+                {uploading ? 'Uploading...' : 'Choose File'}
+            </button>
+
+            {/* {error && <div className="error">{error}</div>}
+            {uploadComplete && <div className="success">Upload complete!</div>} */}
+        </div >
+    );
+};
