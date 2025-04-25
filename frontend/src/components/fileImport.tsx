@@ -1,10 +1,12 @@
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function FileUploader() {
     const [uploading, setUploading] = useState(false);
     const [uploadComplete, setUploadComplete] = useState(false);
     const [error, setError] = useState(null);
+    const router = useRouter();
 
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
@@ -30,10 +32,8 @@ export function FileUploader() {
             if (!response.ok) {
                 throw new Error(`Upload failed with status: ${response.status}`);
             }
-
-            const result = await response.json();
-            console.log('Upload successful:', result);
             setUploadComplete(true);
+            router.refresh();
         } catch (err) {
             console.error('Error uploading file:', err);
             setError(err.detail);

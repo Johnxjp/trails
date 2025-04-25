@@ -1,5 +1,6 @@
 import json
 import os
+import random
 import tempfile
 import traceback
 
@@ -22,9 +23,29 @@ app.add_middleware(
 )
 
 
+os.makedirs("./data", exist_ok=True)
+annotations = []
+if os.path.exists("./data/annotations.json"):
+    with open("./data/annotations.json", "r") as f:
+        annotations = json.load(f)
+
+
 @app.post("/search")
 async def search(query: str):
     return {"code": 200, "query": query}
+
+
+@app.get("/annotations")
+def retrieve_annotations(size: int = 9):
+    """Endpoint to retrieve annotations from the database."""
+    n_annos = len(annotations)
+    logfire.info(f"Found {n_annos} annotations")
+    if n_annos == 0:
+        return {"annotations": []}
+
+    indexes = [random.randrange(n_annos) for _ in range(9)]
+    choices = [annotations[i] for i in indexes]
+    return {"annotations": choices}
 
 
 @app.post("/document/upload/kindle")

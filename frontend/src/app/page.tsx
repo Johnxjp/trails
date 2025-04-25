@@ -1,11 +1,37 @@
 "use client";
 
-import { useState } from 'react';
-import { FileUploader } from '@/components/fileImport';
+import { useEffect, useState } from 'react';
+import { FileUploader } from '@/components/FileImport';
+import { Annotation } from '@/lib/types';
+import { DataGrid } from '@/components/DataGrid';
 
 export default function Home() {
 
   const [inputValue, setInputValue] = useState('');
+  const [data, setData] = useState<Annotation[]>([]);
+
+  useEffect(() => {
+    async function getAnnotations() {
+      console.log('Fetching annotations...');
+      try {
+        const res = await fetch('http://localhost:8000/annotations?size=9', {
+          cache: 'no-store' // Ensure fresh data check
+        });
+        if (!res.ok) {
+          return []; // Return null for error cases
+        }
+
+        const response = await res.json();
+        console.log('Response:', response);
+        setData(response.annotations);
+      } catch (error) {
+        console.error('Failed to fetch annotations:', error);
+        return [];
+      }
+    }
+    getAnnotations();
+  }, []);
+
 
   async function handleSubmit() {
     console.log(inputValue);
@@ -16,7 +42,7 @@ export default function Home() {
     try {
       const url = new URL(`http://localhost:8000/search`);
       url.searchParams.append('query', inputValue);
-      let data = await fetch(url, {
+      const data = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,7 +50,7 @@ export default function Home() {
       });
 
       if (data.ok) {
-        let json = await data.json();
+        const json = await data.json();
         console.log(json);
       } else {
         console.log('Error: ', data.statusText);
@@ -35,47 +61,13 @@ export default function Home() {
     setInputValue('');
   }
 
-  function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const content = e.target?.result;
-        if (typeof content === 'string') {
-          console.log('File content: ', content);
-          try {
-            const url = new URL(`http://localhost:8000/upload`);
-            let data = await fetch(url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ file_content: content }),
-            });
-
-            if (data.ok) {
-              let json = await data.json();
-              console.log(json);
-            } else {
-              console.log('Error: ', data.statusText);
-            }
-          } catch (error) {
-            console.error('Error: ', error);
-          }
-        }
-      };
-      reader.readAsText(file);
-    }
-    else {
-      console.log('No file selected');
-    }
-
-  }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <form className='flex flex-row items-center justify-center'
-        onSubmit={(e) => { e.preventDefault(); e.stopPropagation(); handleSubmit() }}>
+      {data.length > 0 ? (
+        <DataGrid data={data} />
+      ) : < FileUploader />}
+      {/* <form className='flex flex-row items-center justify-center'>
         <input
           className="border rounded px-4 py-2 w-100"
           type="text"
@@ -88,8 +80,7 @@ export default function Home() {
             <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
           </svg>
         </button>
-      </form>
-      <FileUploader />
+      </form> */}
     </div>
   );
 }
