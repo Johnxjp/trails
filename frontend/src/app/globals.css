@@ -15,6 +15,8 @@
 @theme {
   --color-sulphur-yellow: #f5f5b8;
   --color-carmine-red: #a10b2b;
+  --color-pale-lemon-yellow: #fff59e;
+  --color-neutral-grey: #e5e7eb;
 }
 
 @media (prefers-color-scheme: dark) {

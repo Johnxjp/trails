@@ -1,4 +1,5 @@
 export type Annotation = {
+    id: string;
     title: string;
     authors: string | null;
     content: string;

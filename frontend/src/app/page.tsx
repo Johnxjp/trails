@@ -72,15 +72,55 @@ export default function Home() {
     setInputValue('');
   }
 
+  async function saveTrail() {
+    console.log('Saving trail nodes:', trailNodes);
+    const url = new URL(`http://localhost:8000/trail`);
+    const body = {
+      trail: trailNodes.map((node: Annotation) => ({
+        id: node.id,
+        title: node.title,
+        content: node.content,
+      })),
+    }
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (response.ok) {
+        console.log('Trail saved successfully');
+      } else {
+        console.error('Error saving trail:', response.statusText);
+      }
+    }
+    catch (error) {
+      console.error('Error saving trail:', error);
+    }
+
+  }
+  ;
+
 
   return (
 
     <div className="flex flex-row h-screen">
       {/* sidebar */}
       {trailNodes.length > 0 ? (
-        <div className="max-w-md p-5 pt-10 border-r-2 max-h-screen overflow-y-auto scrollbar-thin">
+        <div className="max-w-md p-5 pt-20 border-r-2 max-h-screen overflow-y-auto scrollbar-thin">
+          <div className="w-full m-2 flex justify-end md:px-4 p-1">
+            <button className="
+            inset-shadow-sm inset-shadow-slate-400/50 
+            rounded-full font-bold bg-neutral-grey/80 
+            p-1 w-20 hover:bg-carmine-red 
+            hover:text-white" onClick={saveTrail}>save</button>
+          </div>
           <Trail trailNodes={trailNodes} />
-        </div>) : null}
+        </div>) : null
+      }
       <div className="w-full m-auto">
         {
           data.length > 0 ? (

@@ -1,5 +1,6 @@
 import json
 import os
+from pydantic import BaseModel
 import random
 import tempfile
 import traceback
@@ -111,3 +112,84 @@ async def process_kindle_file(file: UploadFile):
     return {
         "total_annotations": len(annotations),
     }
+
+
+class TrailItem(BaseModel):
+    """Trail object to be used in the API."""
+
+    id: str
+    content: str
+    title: str
+
+
+class Trail(BaseModel):
+    """Trail object to be used in the API."""
+
+    trail: list[TrailItem]
+
+
+@app.post("/trail")
+def create_trail(trail: Trail):
+    """Endpoint to handle trails."""
+    trail_id = str(uuid.uuid4())
+    if not trail.trail:
+        raise HTTPException(
+            status_code=400,
+            detail="No trail items provided.",
+        )
+
+    first_item = trail.trail[0]
+    trail_name = first_item.content[:50]  # TODO: Summary using LLMs
+
+    trail = {
+        "id": trail_id,
+        "name": trail_name,
+        "created_at": "2023-10-01T00:00:00Z",
+        "nodes": [t.model_dump(mode="json") for t in trail.trail],
+        "thumbnail": None,
+        "summary": None,
+    }
+
+    try:
+        with open(f"./data/trails.json", "r") as f:
+            trails = json.load(f)
+
+        with open(f"./data/trails.json", "w") as f:
+            if not trails:
+                trails = []
+            trails.append(trail)
+            json.dump(trails, f, indent=4, ensure_ascii=False)
+    except Exception as e:
+        error_detail = traceback.format_exc()
+        logfire.error(f"Error creating trail: {e}")
+        print(f"Traceback: {error_detail}")
+        raise HTTPException(
+            status_code=500,
+            detail="Error creating trail. Please try again later.",
+        )
+
+    return {
+        "trail_id": trail_id,
+    }
+
+
+@app.get("/trail/{trail_id}")
+def get_trail(trail_id: str):
+    """Endpoint to retrieve a specific trail."""
+    with open("./data/trails.json", "r") as f:
+        trails = json.load(f)
+
+    for trail in trails:
+        if trail["id"] == trail_id:
+            return trail
+
+    raise HTTPException(status_code=404, detail="Trail not found.")
+
+
+@app.get("/trail")
+def get_trails():
+    """Endpoint to retrieve all trails."""
+    with open("./data/trails.json", "r") as f:
+        trails = json.load(f)
+
+    return {"trails": trails}
