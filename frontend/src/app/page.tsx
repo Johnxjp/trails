@@ -77,6 +77,20 @@ export default function Home() {
     setTrailNodes([]);
   }
 
+  function breakTrail(trailItemId: string) {
+    console.log('Breaking trail at:', trailItemId);
+    const index = trailNodes.findIndex((node) => node.id === trailItemId);
+    if (index !== -1) {
+      const newTrailNodes = trailNodes.slice(0, index + 1);
+      setTrailNodes(newTrailNodes);
+    }
+  }
+  function removeFromTrailNodes(trailItemId: string) {
+    console.log('Removing from trail nodes:', trailItemId);
+    const newTrailNodes = trailNodes.filter((node) => node.id !== trailItemId);
+    setTrailNodes(newTrailNodes);
+  }
+
   async function saveTrail() {
     console.log('Saving trail nodes:', trailNodes);
     const url = new URL(`http://localhost:8000/trail`);
@@ -121,16 +135,18 @@ export default function Home() {
             inset-shadow-sm inset-shadow-slate-400/50 
             rounded-full font-bold bg-neutral-grey/80 
             p-1 w-20 hover:bg-carmine-red 
+            hover:cursor-pointer
             hover:text-white" onClick={resetTrail}>reset
             </button>
             <button className="
             inset-shadow-sm inset-shadow-slate-400/50 
             rounded-full font-bold bg-neutral-grey/80 
             p-1 w-20 hover:bg-carmine-red 
+            hover:cursor-pointer
             hover:text-white" onClick={saveTrail}>save
             </button>
           </div>
-          <Trail trailNodes={trailNodes} />
+          <Trail trailNodes={trailNodes} breakTrail={breakTrail} deleteItem={removeFromTrailNodes} />
         </div>) : null
       }
       <div className="w-full m-auto">
