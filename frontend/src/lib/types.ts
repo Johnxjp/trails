@@ -9,3 +9,12 @@ export type Annotation = {
     location_end: number | null;
     date_annotated: string | null;
 }
+
+export type Trail = {
+    id: string;
+    name: string;
+    nodes: Annotation[];
+    created_at: string;
+    summary: string;
+    thumbnail: string;
+}

@@ -192,4 +192,4 @@ def get_trails():
     with open("./data/trails.json", "r") as f:
         trails = json.load(f)
 
-    return {"trails": trails}
+    return trails
