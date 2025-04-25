@@ -22,7 +22,7 @@ export function FileUploader() {
             formData.append('file', file);
 
             // Make the upload request
-            const response = await fetch('http://localhost:8000/document/upload', {
+            const response = await fetch('http://localhost:8000/document/upload/kindle', {
                 method: 'POST',
                 body: formData,
             });
@@ -34,9 +34,9 @@ export function FileUploader() {
             const result = await response.json();
             console.log('Upload successful:', result);
             setUploadComplete(true);
-        } catch (err: any) {
+        } catch (err) {
             console.error('Error uploading file:', err);
-            setError(err.message);
+            setError(err.detail);
         } finally {
             setUploading(false);
         }
@@ -61,11 +61,11 @@ export function FileUploader() {
                 }}
                 disabled={uploading}
             >
-                {uploading ? 'Uploading...' : 'Choose File'}
+                {uploading ? 'Processing...' : 'Choose File'}
             </button>
 
-            {/* {error && <div className="error">{error}</div>}
-            {uploadComplete && <div className="success">Upload complete!</div>} */}
+            {error && <div className="error">{error}</div>}
+            {uploadComplete && <div className="success">Upload complete!</div>}
         </div >
     );
 };
