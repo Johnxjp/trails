@@ -72,6 +72,11 @@ export default function Home() {
     setInputValue('');
   }
 
+  function resetTrail() {
+    console.log('Resetting trail nodes');
+    setTrailNodes([]);
+  }
+
   async function saveTrail() {
     console.log('Saving trail nodes:', trailNodes);
     const url = new URL(`http://localhost:8000/trail`);
@@ -110,13 +115,20 @@ export default function Home() {
     <div className="flex flex-row h-screen">
       {/* sidebar */}
       {trailNodes.length > 0 ? (
-        <div className="max-w-md p-5 pt-20 border-r-2 max-h-screen overflow-y-auto scrollbar-thin">
-          <div className="w-full m-2 flex justify-end md:px-4 p-1">
+        <div className="w-2/5 max-w-md p-5 pt-20 border-r-2 max-h-screen overflow-y-auto scrollbar-thin">
+          <div className="w-full m-2 flex justify-end md:px-4 p-1 gap-2">
             <button className="
             inset-shadow-sm inset-shadow-slate-400/50 
             rounded-full font-bold bg-neutral-grey/80 
             p-1 w-20 hover:bg-carmine-red 
-            hover:text-white" onClick={saveTrail}>save</button>
+            hover:text-white" onClick={resetTrail}>reset
+            </button>
+            <button className="
+            inset-shadow-sm inset-shadow-slate-400/50 
+            rounded-full font-bold bg-neutral-grey/80 
+            p-1 w-20 hover:bg-carmine-red 
+            hover:text-white" onClick={saveTrail}>save
+            </button>
           </div>
           <Trail trailNodes={trailNodes} />
         </div>) : null
