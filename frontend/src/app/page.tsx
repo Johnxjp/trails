@@ -4,11 +4,13 @@ import { useEffect, useState } from 'react';
 import { FileUploader } from '@/components/FileImport';
 import { Annotation } from '@/lib/types';
 import { DataGrid } from '@/components/DataGrid';
+import { Trail } from '@/components/Trail';
 
 export default function Home() {
 
   const [inputValue, setInputValue] = useState('');
   const [data, setData] = useState<Annotation[]>([]);
+  const [trailNodes, setTrailNodes] = useState<Annotation[]>([]);
 
   useEffect(() => {
     async function getAnnotations() {
@@ -30,8 +32,17 @@ export default function Home() {
       }
     }
     getAnnotations();
-  }, []);
+  }, [trailNodes]);
 
+  useEffect(() => {
+    console.log('Trail nodes updated:', trailNodes);
+  }, [trailNodes]);
+
+  function addToTrailNodes(annotation: Annotation) {
+    console.log('Adding to trail nodes:', annotation);
+    const newTrailNodes = [...trailNodes, annotation];
+    setTrailNodes(newTrailNodes);
+  }
 
   async function handleSubmit() {
     console.log(inputValue);
@@ -63,11 +74,20 @@ export default function Home() {
 
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      {data.length > 0 ? (
-        <DataGrid data={data} />
-      ) : < FileUploader />}
-      {/* <form className='flex flex-row items-center justify-center'>
+
+    <div className="flex flex-row h-screen">
+      {/* sidebar */}
+      {trailNodes.length > 0 ? (
+        <div className="max-w-md p-5 pt-10 border-r-2 max-h-screen overflow-y-auto">
+          <Trail trailNodes={trailNodes} />
+        </div>) : null}
+      <div className="w-full m-auto">
+        {
+          data.length > 0 ? (
+            <DataGrid data={data} addToTrailNodes={addToTrailNodes} />
+          ) : < FileUploader />
+        }
+        {/* <form className='flex flex-row items-center justify-center'>
         <input
           className="border rounded px-4 py-2 w-100"
           type="text"
@@ -81,6 +101,7 @@ export default function Home() {
           </svg>
         </button>
       </form> */}
-    </div>
+      </div>
+    </div >
   );
 }
