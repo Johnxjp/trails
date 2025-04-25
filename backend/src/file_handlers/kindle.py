@@ -5,7 +5,7 @@ import re
 from typing import BinaryIO, Dict, List, Optional, Tuple
 
 from src.schemas import (
-    BookAnnotation,
+    RawBookAnnotation,
     BookAnnotationType,
     BOOK_TITLE,
     BOOK_AUTHORS,
@@ -16,7 +16,7 @@ AUTHOR_SEPARATOR = ";"
 
 def process_kindle_file(
     filepath: str,
-) -> Dict[Tuple[BOOK_TITLE, Optional[BOOK_AUTHORS]], List[BookAnnotation]]:
+) -> Dict[Tuple[BOOK_TITLE, Optional[BOOK_AUTHORS]], List[RawBookAnnotation]]:
     """
     Returns a dictionary with the key being a tuple of the title and authors
     and values as annotations for that book.
@@ -25,7 +25,7 @@ def process_kindle_file(
     try:
         annotations = extract_annotations_from_file(filepath)
         grouped_annotations: Dict[
-            Tuple[BOOK_TITLE, Optional[BOOK_AUTHORS]], List[BookAnnotation]
+            Tuple[BOOK_TITLE, Optional[BOOK_AUTHORS]], List[RawBookAnnotation]
         ] = {}
         for anno in annotations:
             key = (anno.title, anno.authors)
@@ -38,7 +38,7 @@ def process_kindle_file(
         return {}
 
 
-def extract_annotations_from_file(filename: str) -> List[BookAnnotation]:
+def extract_annotations_from_file(filename: str) -> List[RawBookAnnotation]:
     """
     Extracts annotations from a file and returns those in order they appear
     in the file.
@@ -73,7 +73,7 @@ def extract_annotations_from_file(filename: str) -> List[BookAnnotation]:
 
             # Marks the end of an annotation.
             elif line == separator:
-                annotation = BookAnnotation(
+                annotation = RawBookAnnotation(
                     title=title,
                     authors=authors,
                     content=content,
@@ -96,7 +96,7 @@ def extract_annotations_from_file(filename: str) -> List[BookAnnotation]:
 
         # Last annotation
         if parsed_title and parsed_metadata and content:
-            annotation = BookAnnotation(
+            annotation = RawBookAnnotation(
                 title=title,
                 authors=authors,
                 content=content,
@@ -111,7 +111,7 @@ def extract_annotations_from_file(filename: str) -> List[BookAnnotation]:
         return annotations
 
 
-def extract_annotations_from_buffer(file: BinaryIO) -> List[BookAnnotation]:
+def extract_annotations_from_buffer(file: BinaryIO) -> List[RawBookAnnotation]:
     """
     Extracts annotations from buffer of bytes and returns those in order they
     appear in the file.
@@ -152,7 +152,7 @@ def extract_annotations_from_buffer(file: BinaryIO) -> List[BookAnnotation]:
 
         # Marks the end of an annotation.
         elif line == separator:
-            annotation = BookAnnotation(
+            annotation = RawBookAnnotation(
                 title=title,
                 authors=authors,
                 content=content,
@@ -174,7 +174,7 @@ def extract_annotations_from_buffer(file: BinaryIO) -> List[BookAnnotation]:
 
     # Last annotation
     if parsed_title and parsed_metadata and content:
-        annotation = BookAnnotation(
+        annotation = RawBookAnnotation(
             title=title,
             authors=authors,
             content=content,
@@ -189,7 +189,7 @@ def extract_annotations_from_buffer(file: BinaryIO) -> List[BookAnnotation]:
     return annotations
 
 
-def is_valid_annotation(annotation: BookAnnotation) -> bool:
+def is_valid_annotation(annotation: RawBookAnnotation) -> bool:
     """
     Valid clips should have some content and be associated with a book.
 

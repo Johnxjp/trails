@@ -3,6 +3,7 @@ import os
 import random
 import tempfile
 import traceback
+import uuid
 
 from fastapi import FastAPI, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,6 +25,8 @@ app.add_middleware(
 
 
 os.makedirs("./data", exist_ok=True)
+
+# TODO: This only works for the first run not stateful
 annotations = []
 if os.path.exists("./data/annotations.json"):
     with open("./data/annotations.json", "r") as f:
@@ -38,6 +41,9 @@ async def search(query: str):
 @app.get("/annotations")
 def retrieve_annotations(size: int = 9):
     """Endpoint to retrieve annotations from the database."""
+    with open("./data/annotations.json", "r") as f:
+        annotations = json.load(f)
+
     n_annos = len(annotations)
     logfire.info(f"Found {n_annos} annotations")
     if n_annos == 0:
@@ -74,7 +80,9 @@ async def process_kindle_file(file: UploadFile):
             # TODO: Only add new items to the database
             # TODO: Configure file path so no errors
             with open("./data/annotations.json", "w") as f:
-                annotations = [a.model_dump(mode="json") for a in annotations]
+                annotations = [
+                    {"id": str(uuid.uuid4()), **a.model_dump(mode="json")} for a in annotations
+                ]
                 json.dump(annotations, f, indent=4, ensure_ascii=False)
 
             logfire.info(f"Found {len(annotations)} annotations")
@@ -86,6 +94,19 @@ async def process_kindle_file(file: UploadFile):
             status_code=500,
             detail="Error processing kindle file. Please try again later.",
         )
+    finally:
+        # Clean up the temporary file
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
+
+        # Clean up json file if corrupted
+        if os.path.exists("./data/annotations.json"):
+            try:
+                with open("./data/annotations.json", "r") as f:
+                    json.load(f)
+            except json.JSONDecodeError:
+                os.remove("./data/annotations.json")
+                logfire.error("Corrupted annotations file removed.")
 
     return {
         "total_annotations": len(annotations),

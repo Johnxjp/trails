@@ -24,7 +24,7 @@ class DocumentType(StrEnum):
     VIDEO = "video"
 
 
-class BookAnnotation(BaseModel):
+class RawBookAnnotation(BaseModel):
     """Note from book with metadata"""
 
     title: str
@@ -35,3 +35,7 @@ class BookAnnotation(BaseModel):
     location_start: Optional[int] = None
     location_end: Optional[int] = None
     date_annotated: Optional[datetime] = None
+
+
+class BookAnnotation(RawBookAnnotation):
+    id: str

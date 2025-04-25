@@ -78,7 +78,7 @@ export default function Home() {
     <div className="flex flex-row h-screen">
       {/* sidebar */}
       {trailNodes.length > 0 ? (
-        <div className="max-w-md p-5 pt-10 border-r-2 max-h-screen overflow-y-auto">
+        <div className="max-w-md p-5 pt-10 border-r-2 max-h-screen overflow-y-auto scrollbar-thin">
           <Trail trailNodes={trailNodes} />
         </div>) : null}
       <div className="w-full m-auto">

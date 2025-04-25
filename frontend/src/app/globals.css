@@ -29,3 +29,18 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Add this to your global CSS */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+/* For Webkit browsers (Chrome, Safari) */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
