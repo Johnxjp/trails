@@ -1,7 +1,7 @@
 "use client";
 
 import { Trail } from "@/lib/types";
-import { getTrailData } from "@/lib/getTrailData";
+import { getTrailData } from "@/app/trails/lib/getTrailData";
 
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
