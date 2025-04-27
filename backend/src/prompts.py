@@ -25,6 +25,7 @@ The narrative should:
 6. Be reflective and intimate in tone, as if writing in a personal journal
 7. Include occasional moments of insight or surprise about patterns that emerge across the notes
 8. Keep the overall length under 500 words
+9. Do not use markdown formatting
 
 Give your narrative a title that feels personal and intriguing—something that might appear in a dog-eared journal or as the title of a letter to a close friend. Avoid grandiose or academic-sounding titles. The title should hint at the journey without being too explicit, perhaps using a gentle metaphor or an interesting phrase from one of the notes.
 

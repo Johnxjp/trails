@@ -154,6 +154,7 @@ def create_trail(trailRequest: TrailRequest):
         "created_at": "2023-10-01T00:00:00Z",
         "nodes": [t.model_dump(mode="json") for t in trailRequest.trail],
         "narrative_id": str(uuid.uuid4()),
+        "narrative": None,
     }
 
     try:
@@ -200,6 +201,7 @@ def create_trail(trailRequest: TrailRequest):
                 narratives.append(narrative_data)
                 json.dump(narratives, f, indent=4, ensure_ascii=False)
 
+            trail["narrative"] = narrative_data
             logfire.info("Trail and narrative saved successfully.")
         else:
             logfire.warning("Failed to generate narrative")
@@ -213,7 +215,7 @@ def create_trail(trailRequest: TrailRequest):
             detail="Error creating trail. Please try again later.",
         )
 
-    return {"trail": trail, "narrative": narrative_data}
+    return {"trail": trail}
 
 
 @app.get("/trail/{trail_id}")
@@ -238,7 +240,21 @@ def get_trail(trail_id: str):
                 narrative = n
                 break
 
-        return {"trail": trail, "narrative": narrative}
+        trail = {
+            "id": trail["id"],
+            "name": trail["name"],
+            "created_at": trail["created_at"],
+            "nodes": trail["nodes"],
+            "narrative_id": trail["narrative_id"],
+            "narrative": {
+                "id": trail["narrative_id"],
+                "title": narrative["title"] if narrative else None,
+                "content": narrative["content"] if narrative else None,
+                "references": narrative["references"] if narrative else None,
+                "thumbnail_url": narrative["thumbnail_url"] if narrative else None,
+            },
+        }
+        return {"trail": trail}
 
     raise HTTPException(status_code=404, detail="Trail not found.")
 

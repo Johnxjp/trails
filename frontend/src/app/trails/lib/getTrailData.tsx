@@ -1,3 +1,5 @@
+import { Trail } from "@/lib/types";
+
 export function getTrailData() {
     return fetch('http://localhost:8000/trail', {
         method: 'GET',
@@ -25,6 +27,10 @@ export function getTrailDataById(id: string) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
+        })
+        .then((data: { trail: Trail }) => {
+            console.log('Trail data:', data);
+            return data.trail; // Return the trail data
         })
         .catch((error) => {
             console.error('Error fetching trail data:', error);

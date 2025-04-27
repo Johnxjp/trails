@@ -10,11 +10,24 @@ export type Annotation = {
     date_annotated: string | null;
 }
 
+export type NarrativeReferences = {
+    id: string;  // annotation id referenced in the narrative
+    text: string; // text in the narrative
+}
+
+export type Narrative = {
+    id: string;
+    title: string;
+    content: string;
+    references: NarrativeReferences[];
+    thumbnail_url: string | null;
+}
+
 export type Trail = {
     id: string;
     name: string;
     nodes: Annotation[];
     created_at: string;
-    summary: string;
-    thumbnail: string;
+    narrative_id: string;
+    narrative: Narrative | null;
 }
