@@ -6,6 +6,9 @@ import traceback
 import uuid
 
 from dotenv import load_dotenv
+
+load_dotenv()
+
 from fastapi import FastAPI, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -14,8 +17,8 @@ import logfire
 import src.file_handlers as fh
 from src.narrative import generate_narrative
 
-load_dotenv()
-logfire.configure(send_to_logfire=False)
+logfire.configure(send_to_logfire=True)
+logfire.instrument_openai()
 app = FastAPI(debug=True)
 
 # TODO: Settings probably need to be more robust
@@ -117,7 +120,7 @@ async def process_kindle_file(file: UploadFile):
     }
 
 
-class TrailItem(BaseModel):
+class TrailItemBody(BaseModel):
     """Trail object to be used in the API."""
 
     id: str
@@ -126,36 +129,38 @@ class TrailItem(BaseModel):
     authors: str
 
 
-class Trail(BaseModel):
+class TrailRequest(BaseModel):
     """Trail object to be used in the API."""
 
-    trail: list[TrailItem]
+    trail: list[TrailItemBody]
 
 
 @app.post("/trail")
-def create_trail(trail: Trail):
+def create_trail(trailRequest: TrailRequest):
     """Endpoint to handle trails."""
     trail_id = str(uuid.uuid4())
-    if not trail.trail:
+    if not trailRequest.trail:
         raise HTTPException(
             status_code=400,
             detail="No trail items provided.",
         )
 
-    first_item = trail.trail[0]
+    first_item = trailRequest.trail[0]
     trail_name = first_item.content[:50]  # TODO: Summary using LLMs
 
     trail = {
         "id": trail_id,
         "name": trail_name,
         "created_at": "2023-10-01T00:00:00Z",
-        "nodes": [t.model_dump(mode="json") for t in trail.trail],
+        "nodes": [t.model_dump(mode="json") for t in trailRequest.trail],
         "narrative_id": str(uuid.uuid4()),
     }
 
     try:
-        with open(f"./data/trails.json", "r") as f:
-            trails = json.load(f)
+        trails = []
+        if os.path.exists("./data/trails.json"):
+            with open(f"./data/trails.json", "r") as f:
+                trails = json.load(f)
 
         with open(f"./data/trails.json", "w") as f:
             if not trails:
@@ -163,33 +168,41 @@ def create_trail(trail: Trail):
             trails.append(trail)
             json.dump(trails, f, indent=4, ensure_ascii=False)
 
-        notes = json.dumps(
-            [
-                {
-                    "id": item.id,
-                    "book_title": item.title,
-                    "authors": item.authors,
-                    "content": item.content,
-                }
-                for item in trail.trail
-            ]
-        )
         # Generate the narrative with LLM
         logfire.info("Generating narrative...")
-        narrative = generate_narrative(notes=notes)
-        narrative_data = {}
-        narrative_data["id"] = trail["narrative_id"]
-        narrative_data["title"] = narrative.title
-        narrative_data["content"] = narrative.content
-        narrative_data["references"] = [
-            {"id": ref.id, "text": ref.text} for ref in narrative.references
-        ]
-        narrative_data["thumbnail_url"] = "/public/narrative_image.png"  # TODO: Generate thumbnail
-        logfire.info("Narrative generated successfully. Saving...")
-        with open(f"./data/trail_narratives.json", "w") as f:
-            json.dump(narrative_data, f, indent=4, ensure_ascii=False)
+        notes = ""
+        for index, item in enumerate(trail["nodes"]):
+            note_str = f"Note {index}\n id: {item['id']}, book_title: {item['title']}, authors: {item['authors']}, content: {item['content']}\n"
+            notes += note_str
 
-        logfire.info("Trail and narrative saved successfully.")
+        narrative = generate_narrative(notes=notes)
+        narrative_data = None
+        if narrative:
+            narrative_data = {}
+            narrative_data["id"] = trail["narrative_id"]
+            narrative_data["title"] = narrative.title
+            narrative_data["content"] = narrative.content
+            narrative_data["references"] = [
+                {"id": ref.id, "text": ref.text} for ref in narrative.references
+            ]
+            narrative_data["thumbnail_url"] = (
+                "/public/narrative_image.png"  # TODO: Generate thumbnail
+            )
+            logfire.info("Narrative generated successfully. Saving...")
+
+            narratives = []
+            if os.path.exists("./data/trail_narratives.json"):
+                with open("./data/trail_narratives.json", "r") as f:
+                    narratives = json.load(f)
+            with open(f"./data/trail_narratives.json", "w") as f:
+                if not narratives:
+                    narratives = []
+                narratives.append(narrative_data)
+                json.dump(narratives, f, indent=4, ensure_ascii=False)
+
+            logfire.info("Trail and narrative saved successfully.")
+        else:
+            logfire.warning("Failed to generate narrative")
 
     except Exception as e:
         error_detail = traceback.format_exc()

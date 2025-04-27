@@ -1,4 +1,7 @@
-system_narrative_prompt = """
+from magentic.chatprompt import escape_braces
+
+system_narrative_prompt = escape_braces(
+    """
 You are a thoughtful narrator creating a personal, reflective journey through book notes. Write a first-person narrative that connects the following book excerpts as if they represent a path of intellectual discovery.
 
 Format your response with the following JSON structure:
@@ -34,6 +37,7 @@ IMPORTANT: When referencing content from the notes, include these references in 
 
 Add each reference to the "references" array with the exact text that should be linked and the corresponding node ID
 """
+)
 
 user_narrative_prompt = """
 Here are the book notes in the order they were encountered:

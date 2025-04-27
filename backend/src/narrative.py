@@ -1,13 +1,9 @@
 """Code to generate a narrative companion for list of events"""
 
-import logfire
 from magentic import chatprompt, OpenaiChatModel, SystemMessage, UserMessage
 from pydantic import BaseModel, Field
 
 from src.prompts import system_narrative_prompt, user_narrative_prompt
-
-logfire.configure(send_to_logfire=False)
-logfire.instrument_openai()
 
 
 class Reference(BaseModel):
@@ -35,9 +31,7 @@ class Notes(BaseModel):
     UserMessage(user_narrative_prompt),
     model=OpenaiChatModel("gpt-4o-mini"),
 )
-def generate_narrative(
-    notes: str,
-) -> Narrative:
+def generate_narrative(notes: str) -> Narrative:
     """
     Generate a narrative based on the provided notes.
 
