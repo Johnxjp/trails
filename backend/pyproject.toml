@@ -7,4 +7,6 @@ requires-python = ">=3.12"
 dependencies = [
     "fastapi[standard]>=0.115.12",
     "logfire>=3.14.1",
+    "magentic>=0.39.3",
+    "python-dotenv>=1.1.0",
 ]

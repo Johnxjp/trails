@@ -99,6 +99,7 @@ export default function Home() {
         id: node.id,
         title: node.title,
         content: node.content,
+        authors: node.authors,
       })),
     }
     try {

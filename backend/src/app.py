@@ -1,19 +1,22 @@
 import json
 import os
-from pydantic import BaseModel
 import random
 import tempfile
 import traceback
 import uuid
 
+from dotenv import load_dotenv
 from fastapi import FastAPI, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import logfire
 
 import src.file_handlers as fh
+from src.narrative import generate_narrative
 
-app = FastAPI(debug=True)
+load_dotenv()
 logfire.configure(send_to_logfire=False)
+app = FastAPI(debug=True)
 
 # TODO: Settings probably need to be more robust
 app.add_middleware(
@@ -120,6 +123,7 @@ class TrailItem(BaseModel):
     id: str
     content: str
     title: str
+    authors: str
 
 
 class Trail(BaseModel):
@@ -146,8 +150,7 @@ def create_trail(trail: Trail):
         "name": trail_name,
         "created_at": "2023-10-01T00:00:00Z",
         "nodes": [t.model_dump(mode="json") for t in trail.trail],
-        "thumbnail": None,
-        "summary": None,
+        "narrative_id": str(uuid.uuid4()),
     }
 
     try:
@@ -159,6 +162,35 @@ def create_trail(trail: Trail):
                 trails = []
             trails.append(trail)
             json.dump(trails, f, indent=4, ensure_ascii=False)
+
+        notes = json.dumps(
+            [
+                {
+                    "id": item.id,
+                    "book_title": item.title,
+                    "authors": item.authors,
+                    "content": item.content,
+                }
+                for item in trail.trail
+            ]
+        )
+        # Generate the narrative with LLM
+        logfire.info("Generating narrative...")
+        narrative = generate_narrative(notes=notes)
+        narrative_data = {}
+        narrative_data["id"] = trail["narrative_id"]
+        narrative_data["title"] = narrative.title
+        narrative_data["content"] = narrative.content
+        narrative_data["references"] = [
+            {"id": ref.id, "text": ref.text} for ref in narrative.references
+        ]
+        narrative_data["thumbnail_url"] = "/public/narrative_image.png"  # TODO: Generate thumbnail
+        logfire.info("Narrative generated successfully. Saving...")
+        with open(f"./data/trail_narratives.json", "w") as f:
+            json.dump(narrative_data, f, indent=4, ensure_ascii=False)
+
+        logfire.info("Trail and narrative saved successfully.")
+
     except Exception as e:
         error_detail = traceback.format_exc()
         logfire.error(f"Error creating trail: {e}")
@@ -168,9 +200,7 @@ def create_trail(trail: Trail):
             detail="Error creating trail. Please try again later.",
         )
 
-    return {
-        "trail_id": trail_id,
-    }
+    return {"trail": trail, "narrative": narrative_data}
 
 
 @app.get("/trail/{trail_id}")
@@ -179,9 +209,23 @@ def get_trail(trail_id: str):
     with open("./data/trails.json", "r") as f:
         trails = json.load(f)
 
-    for trail in trails:
-        if trail["id"] == trail_id:
-            return trail
+    with open("./data/trail_narratives.json", "r") as f:
+        narratives = json.load(f)
+
+    trail = None
+    for t in trails:
+        if t["id"] == trail_id:
+            trail = t
+            break
+
+    if trail:
+        narrative = None
+        for n in narratives:
+            if n["id"] == trail["narrative_id"]:
+                narrative = n
+                break
+
+        return {"trail": trail, "narrative": narrative}
 
     raise HTTPException(status_code=404, detail="Trail not found.")
 
