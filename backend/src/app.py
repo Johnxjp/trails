@@ -57,7 +57,23 @@ def retrieve_annotations(size: int = 9):
     if n_annos == 0:
         return {"annotations": []}
 
-    indexes = [random.randrange(n_annos) for _ in range(9)]
+    indexes = [random.randrange(n_annos) for _ in range(size)]
+    choices = [annotations[i] for i in indexes]
+    return {"annotations": choices}
+
+
+@app.get("/annotations/{annotation_id}/related")
+def retrieve_related_annotations(annotation_id: str, max_items: int = 9):
+    """Endpoint to retrieve annotations from the database."""
+    with open("./data/annotations.json", "r") as f:
+        annotations = json.load(f)
+
+    n_annos = len(annotations)
+    logfire.info(f"Found {n_annos} annotations")
+    if n_annos == 0:
+        return {"annotations": []}
+
+    indexes = [random.randrange(n_annos) for _ in range(max_items)]
     choices = [annotations[i] for i in indexes]
     return {"annotations": choices}
 
