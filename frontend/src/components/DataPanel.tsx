@@ -3,14 +3,15 @@
 import { Annotation } from "@/lib/types";
 import { useEffect, useState } from "react";
 
-export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: string | null, panelIndex: number, updateTrailNodes: (annotationId: string, panelIndex: number) => void }) {
+export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: string | null, panelIndex: number, updateTrailNodes: (annotation: Annotation, panelIndex: number) => void }) {
 
-    const [selectedAnnotationId, setSelectedAnnotationId] = useState<string | null>(null);
-    const [displayedAnnotations, setDisplayedAnnotations] = useState<Annotation[]>([]);
+    console.log('DataPanel seedId:', seedId);
+    const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation | null>(null);
+    const [candidateAnnotations, setCandidateAnnotations] = useState<Annotation[]>([]);
 
-    function handleAnnotationClick(annotationId: string) {
-        setSelectedAnnotationId(annotationId);
-        updateTrailNodes(annotationId, panelIndex);
+    function handleAnnotationClick(annotation: Annotation) {
+        setSelectedAnnotation(annotation);
+        updateTrailNodes(annotation, panelIndex);
     }
 
     useEffect(() => {
@@ -23,7 +24,7 @@ export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: st
                     throw new Error("Network response was not ok");
                 }
                 const data: { annotations: Annotation[] } = await response.json();
-                setDisplayedAnnotations(data.annotations);
+                setCandidateAnnotations(data.annotations);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -36,7 +37,7 @@ export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: st
                     throw new Error("Network response was not ok");
                 }
                 const data: { annotations: Annotation[] } = await response.json();
-                setDisplayedAnnotations(data.annotations);
+                setCandidateAnnotations(data.annotations);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -52,9 +53,10 @@ export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: st
     }, [seedId]);
 
     function renderSelectedAnnotation(annotation: Annotation) {
+        console.log('renderUnselectedAnnotation', annotation);
         return (
             <div
-                className={`space-y-5 text-white min-h-48 hover:cursor-pointer flex flex-col bg-carmine-red/80 transition-colors duration-200 shadow-md rounded-lg p-4 ${selectedAnnotationId === annotation.id ? 'bg-carmine-red/80' : ''}`}>
+                className={"space-y-5 text-white min-h-48 hover:cursor-pointer flex flex-col bg-carmine-red/80 transition-colors duration-200 shadow-md rounded-lg p-4"}>
                 <h2 className="text-lg font-bold line-clamp-2 mb-2">{annotation.title || "Untitled"}</h2>
                 <p className="flex-grow">{annotation.content}</p>
             </div>
@@ -62,9 +64,10 @@ export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: st
     }
 
     function renderUnselectedAnnotation(annotation: Annotation) {
+        console.log('renderUnselectedAnnotation', annotation);
         return (
             <div
-                className={`space-y-5 hover:text-white min-h-48 h-48 hover:h-auto hover:cursor-pointer flex flex-col bg-sulphur-yellow/50 hover:bg-carmine-red/80 transition-colors duration-200 shadow-md rounded-lg p-4 ${selectedAnnotationId === annotation.id ? 'bg-carmine-red/80' : ''}`}>
+                className={"space-y-5 hover:text-white min-h-48 h-48 hover:h-auto hover:cursor-pointer flex flex-col bg-sulphur-yellow/50 hover:bg-carmine-red/80 transition-colors duration-200 shadow-md rounded-lg p-4"}>
                 <h2 className="text-lg font-bold line-clamp-2 mb-2">{annotation.title || "Untitled"}</h2>
                 <p className="overflow-hidden line-clamp-4 hover:line-clamp-none flex-grow">{annotation.content}</p>
             </div>
@@ -75,9 +78,9 @@ export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: st
         <div className="flex flex-col min-w-lg max-w-lg py-5 px-5 shadow-lg h-full">
             {seedId === null ? <h1 className="font-bold text-lg ">Your Journey Begins</h1> : <h1 className="font-bold text-lg ">Related Annotations</h1>}
             <ul className="grid w-full md:grid-cols-1 gap-3 mt-5 overflow-y-auto h-full scrollbar-thin">
-                {displayedAnnotations.map((annotation, i) => (
-                    <li className="flex-1" key={i} onClick={() => handleAnnotationClick(annotation.id)}>
-                        {(selectedAnnotationId && annotation.id == selectedAnnotationId) ? (
+                {candidateAnnotations.map((annotation, i) => (
+                    <li className="flex-1" key={i} onClick={() => handleAnnotationClick(annotation)}>
+                        {(selectedAnnotation && annotation.id == selectedAnnotation.id) ? (
                             renderSelectedAnnotation(annotation)
                         ) : (
                             renderUnselectedAnnotation(annotation)

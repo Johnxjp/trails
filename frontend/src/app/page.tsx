@@ -11,7 +11,7 @@ export default function Home() {
 
   const [inputValue, setInputValue] = useState('');
   // const [data, setData] = useState<Annotation[]>([]);
-  const [trailNodeIds, setTrailNodeIds] = useState<string[]>([]);
+  const [trailNodes, setTrailNodes] = useState<Annotation[]>([]);
 
   // useEffect(() => {
   //   async function getAnnotations() {
@@ -39,19 +39,19 @@ export default function Home() {
   //   console.log('Trail nodes updated:', trailNodes);
   // }, [trailNodes]);
 
-  function updateTrailNodes(annotationId: string, panelIndex: number) {
+  function updateTrailNodes(annotation: Annotation, panelIndex: number) {
     // Check if panelIndex is equal to length of trailNodes. If so append the annotation to the end of the array
     // Otherwise, break the trail at the index of the panelIndex and insert the annotation
-    if (panelIndex === trailNodeIds.length) {
+    if (panelIndex === trailNodes.length) {
       console.log('Appending to end of trail nodes');
-      const newTrailNodes = [...trailNodeIds, annotationId];
-      setTrailNodeIds(newTrailNodes);
+      const newTrailNodes = [...trailNodes, annotation];
+      console.log('New trail nodes:', newTrailNodes);
+      setTrailNodes(newTrailNodes);
     } else {
       console.log('Changing branch at index:', panelIndex);
-      const newTrailNodes = [...trailNodeIds.slice(0, panelIndex), annotationId];
-      setTrailNodeIds(newTrailNodes);
+      const newTrailNodes = [...trailNodes.slice(0, panelIndex), annotation];
+      setTrailNodes(newTrailNodes);
     }
-
   }
 
   async function handleSubmit() {
@@ -132,25 +132,45 @@ export default function Home() {
     }
 
   }
-  ;
 
 
   return (
 
-    <div className="flex flex-row h-screen w-screen justify-items-start overflow-hidden overflow-x-auto scrollbar-thin">
+    <div className="flex flex-col h-screen w-screen justify-items-start overflow-hidden overflow-x-auto scrollbar-thin">
+      <div>
+        <div className="w-full m-2 flex justify-end md:px-4 p-1 gap-2">
+          <button className="
+            inset-shadow-sm inset-shadow-slate-400/50 
+            rounded-full font-bold bg-neutral-grey/80 
+            p-1 w-20 hover:bg-carmine-red 
+            hover:cursor-pointer
+            hover:text-white" onClick={resetTrail}>reset
+          </button>
+          <button className="
+            inset-shadow-sm inset-shadow-slate-400/50 
+            rounded-full font-bold bg-neutral-grey/80 
+            p-1 w-20 hover:bg-carmine-red 
+            hover:cursor-pointer
+            hover:text-white" onClick={saveTrail}>save
+          </button>
+        </div>
+      </div>
       {/* Seed Panel */}
-      <DataPanel key={0} seedId={null} panelIndex={0} updateTrailNodes={updateTrailNodes} />
-      {
-        trailNodeIds.map((annotationId, index) => (
-          <DataPanel
-            key={index + 1}
-            seedId={annotationId}
-            panelIndex={index + 1}
-            updateTrailNodes={updateTrailNodes}
-          />
-        ))
+      <div className="h-full flex flex-row w-full">
+        <DataPanel key={0} seedId={null} panelIndex={0} updateTrailNodes={updateTrailNodes} />
+        {
+          trailNodes.map((annotation, index) => (
+            console.log('Rendering trail node:', annotation),
+            <DataPanel
+              key={index + 1}
+              seedId={annotation.id}
+              panelIndex={index + 1}
+              updateTrailNodes={updateTrailNodes}
+            />
+          ))
 
-      }
+        }
+      </div>
     </div>
   );
 }
