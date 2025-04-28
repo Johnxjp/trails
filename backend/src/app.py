@@ -47,7 +47,7 @@ async def search(query: str):
 
 
 @app.get("/annotations")
-def retrieve_annotations(size: int = 9):
+def retrieve_annotations(size: int = 5):
     """Endpoint to retrieve annotations from the database."""
     with open("./data/annotations.json", "r") as f:
         annotations = json.load(f)
@@ -63,7 +63,7 @@ def retrieve_annotations(size: int = 9):
 
 
 @app.get("/annotations/{annotation_id}/related")
-def retrieve_related_annotations(annotation_id: str, max_items: int = 9):
+def retrieve_related_annotations(annotation_id: str, max_items: int = 5):
     """Endpoint to retrieve annotations from the database."""
     with open("./data/annotations.json", "r") as f:
         annotations = json.load(f)

@@ -136,7 +136,7 @@ export default function Home() {
 
   return (
 
-    <div className="flex flex-col h-screen w-screen justify-items-start overflow-hidden overflow-x-auto scrollbar-thin">
+    <div className="flex flex-col h-screen w-screen justify-items-start">
       <div>
         <div className="w-full m-2 flex justify-end md:px-4 p-1 gap-2">
           <button className="
@@ -156,7 +156,7 @@ export default function Home() {
         </div>
       </div>
       {/* Seed Panel */}
-      <div className="h-full flex flex-row w-full">
+      <div className="h-full flex flex-row w-full overflow-hidden overflow-x-auto scrollbar-thin">
         <DataPanel key={0} seedId={null} panelIndex={0} updateTrailNodes={updateTrailNodes} />
         {
           trailNodes.map((annotation, index) => (

@@ -19,7 +19,7 @@ export function AnnotationPanel({ annotations }: { annotations: Annotation[] }) 
                         {annotations.map((d, i) => (
                             <li className="flex-1" key={i}>
                                 <div
-                                    className="w-100 space-y-5 hover:text-white hover:cursor-pointer flex flex-col bg-sulphur-yellow/50 hover:bg-carmine-red/80 transition-colors duration-200 shadow-md rounded-lg p-4">
+                                    className="w-100 space-y-5 hover:text-white hover:cursor-pointer flex flex-col bg-neutral-grey/50 hover:bg-carmine-red/80 transition-colors duration-200 shadow-md rounded-lg p-4">
                                     <h2 className="text-lg font-bold line-clamp-2 mb-2">{d.title || "Untitled"}</h2>
                                     <p>{d.content}</p>
                                 </div>

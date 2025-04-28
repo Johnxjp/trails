@@ -67,7 +67,7 @@ export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: st
         console.log('renderUnselectedAnnotation', annotation);
         return (
             <div
-                className={"space-y-5 hover:text-white min-h-48 h-48 hover:h-auto hover:cursor-pointer flex flex-col bg-sulphur-yellow/50 hover:bg-carmine-red/80 transition-colors duration-200 shadow-md rounded-lg p-4"}>
+                className={"space-y-5 hover:text-white min-h-48 h-48 hover:h-auto hover:cursor-pointer flex flex-col bg-sulphur-yellow/30 hover:bg-carmine-red/80 transition-colors duration-200 shadow-md rounded-lg p-4"}>
                 <h2 className="text-lg font-bold line-clamp-2 mb-2">{annotation.title || "Untitled"}</h2>
                 <p className="overflow-hidden line-clamp-4 hover:line-clamp-none flex-grow">{annotation.content}</p>
             </div>
@@ -76,7 +76,7 @@ export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: st
 
     return (
         <div className="flex flex-col min-w-lg max-w-lg py-5 px-5 shadow-lg h-full">
-            {seedId === null ? <h1 className="font-bold text-lg ">Your Journey Begins</h1> : <h1 className="font-bold text-lg ">Related Annotations</h1>}
+            {seedId === null ? <h1 className="font-bold text-lg ">Choose a Starting Point</h1> : <h1 className="font-bold text-lg ">Your Related Annotations</h1>}
             <ul className="grid w-full md:grid-cols-1 gap-3 mt-5 overflow-y-auto h-full scrollbar-thin">
                 {candidateAnnotations.map((annotation, i) => (
                     <li className="flex-1" key={i} onClick={() => handleAnnotationClick(annotation)}>
