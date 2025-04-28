@@ -16,6 +16,7 @@ import logfire
 
 import src.file_handlers as fh
 from src.narrative import generate_narrative
+from src.utils import get_current_utc_time
 
 logfire.configure(send_to_logfire=True)
 logfire.instrument_openai()
@@ -151,7 +152,7 @@ def create_trail(trailRequest: TrailRequest):
     trail = {
         "id": trail_id,
         "name": trail_name,
-        "created_at": "2023-10-01T00:00:00Z",
+        "created_at": get_current_utc_time(),
         "nodes": [t.model_dump(mode="json") for t in trailRequest.trail],
         "narrative_id": str(uuid.uuid4()),
         "narrative": None,

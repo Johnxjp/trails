@@ -4,6 +4,7 @@ import Image from "next/image";
 import Markdown from "react-markdown";
 
 import { getTrailDataById } from "../lib/getTrailData";
+import { formatLocalDate } from "@/lib/utils";
 
 export default async function TrailItemPage({ params }: {
     params: Promise<{ id: string }>
@@ -27,7 +28,7 @@ export default async function TrailItemPage({ params }: {
             <div className="flex flex-row max-w-5xl w-full items-top p-4 gap-10">
                 <div className="flex flex-col w-4/6 space-y-2 m-2">
                     <h1 className="font-semibold text-2xl text-black">{trail.narrative?.title || trail.name || "Untitled"}</h1>
-                    <p>{trail.created_at}</p>
+                    <p>{formatLocalDate(trail.created_at)}</p>
                     <Image src="/narrative_image.png" alt="narrative image" width={600} height={200} className="rounded-lg shadow-md" />
                     <Markdown>{trail.narrative?.content}</Markdown>
                     {/* <p className="flex-grow">{trail.summary || "A meandering and lovely trail through your notes"}</p> */}
