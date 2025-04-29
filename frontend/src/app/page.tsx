@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // import { FileUploader } from '@/components/FileImport';
 import { Annotation } from '@/lib/types';
 import { DataPanel } from '@/components/DataPanel';
@@ -12,6 +12,8 @@ export default function Home() {
   const [inputValue, setInputValue] = useState('');
   // const [data, setData] = useState<Annotation[]>([]);
   const [trailNodes, setTrailNodes] = useState<Annotation[]>([]);
+  const [trailSaving, setTrailSaving] = useState(false);
+  const [trailSaved, setTrailSaved] = useState(false);
 
   // useEffect(() => {
   //   async function getAnnotations() {
@@ -52,6 +54,7 @@ export default function Home() {
       const newTrailNodes = [...trailNodes.slice(0, panelIndex), annotation];
       setTrailNodes(newTrailNodes);
     }
+    setTrailSaved(false);
   }
 
   async function handleSubmit() {
@@ -84,6 +87,7 @@ export default function Home() {
 
   function resetTrail() {
     console.log('Resetting trail nodes');
+    setTrailSaved(false);
     setTrailNodes([]);
   }
 
@@ -113,6 +117,7 @@ export default function Home() {
       })),
     }
     try {
+      setTrailSaving(true)
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -123,12 +128,15 @@ export default function Home() {
 
       if (response.ok) {
         console.log('Trail saved successfully');
+        setTrailSaved(true);
       } else {
         console.error('Error saving trail:', response.statusText);
       }
+      setTrailSaving(false)
     }
     catch (error) {
       console.error('Error saving trail:', error);
+      setTrailSaving(false)
     }
 
   }
@@ -146,12 +154,12 @@ export default function Home() {
             hover:cursor-pointer
             hover:text-white" onClick={resetTrail}>reset
           </button>
-          <button className="
+          <button className={`
             inset-shadow-sm inset-shadow-slate-400/50 
-            rounded-full font-bold bg-neutral-grey/80 
+            rounded-full font-bold ${trailSaved ? 'bg-emerald-200' : 'bg-neutral-grey/80'}
             p-1 w-20 hover:bg-carmine-red 
             hover:cursor-pointer
-            hover:text-white" onClick={saveTrail}>save
+            hover:text-white`} onClick={saveTrail}>{`${trailSaved ? 'saved' : trailSaving ? 'saving' : 'save'}`}
           </button>
         </div>
       </div>
