@@ -33,7 +33,7 @@ export default async function TrailItemPage({ params }: {
                 </div>
                 <div className="flex flex-row w-full items-top px-4 gap-10">
                     <div className="flex flex-col min-w-4/6 max-w-4/6 space-y-2">
-                        <Image src="/narrative_image.png" alt="narrative image" width={650} height={200} className="rounded-lg shadow-md mb-5" />
+                        <Image src={trail.narrative?.thumbnail_url || "/image_12.jpeg"} alt="narrative image" width={650} height={200} className="rounded-lg shadow-md mb-5" />
                         <Markdown>{trail.narrative?.content}</Markdown>
                         {/* <p className="flex-grow">{trail.summary || "A meandering and lovely trail through your notes"}</p> */}
                     </div>

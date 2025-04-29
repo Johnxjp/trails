@@ -3,6 +3,7 @@
 import { Trail } from "@/lib/types";
 import { getTrailData } from "@/app/trails/lib/getTrailData";
 
+import Image from "next/image";
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from "react";
 import { formatLocalDate } from "@/lib/utils";
@@ -30,20 +31,26 @@ export default function TrailHistoryPage() {
 
     return (
         <div className="mx-auto w-screen h-screen px-1 md:px-2 flex flex-col">
-            <ul className="grid gap-4 max-w-2xl mx-auto w-full mt-30">
-                {trailHistory
-                    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-                    .map((trail: Trail, i: number) => (
-                        <li key={i} onClick={() => router.push(`/trails/${trail.id}`)}>
-                            <div key={i} className="hover:text-white hover:cursor-pointer flex flex-col bg-sulphur-yellow/50 hover:bg-carmine-red/80 transition-colors duration-200 shadow-md rounded-lg p-4">
-                                <h2 className="text-2xl line-clamp-1 mb-2">{trail.name || "Untitled"}</h2>
-                                <p>{formatLocalDate(trail.created_at)}</p>
-                                {/* <p className="overflow-hidden line-clamp-4 flex-grow">{trail.summary || "A meandering and lovely trail through your notes"}</p> */}
-                            </div>
-                        </li>
-                    ))}
-
-            </ul>
+            <div className="max-w-7xl mx-auto mt-10">
+                <h1 className="w-full text-lg font-satoshi font-semibold my-2 p-1">Past Explorations</h1>
+                <ul className="grid w-full grid-cols-3">
+                    {trailHistory
+                        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                        .map((trail: Trail, i: number) => {
+                            const imageIndex = Math.floor(Math.random() * 11) + 1;
+                            return (<li key={i} onClick={() => router.push(`/trails/${trail.id}`)}>
+                                <div key={i} className="hover:cursor-pointer flex flex-col rounded-lg p-1 mb-2">
+                                    {/* TODO: Image Thumbnail needs changing */}
+                                    <Image src={trail.narrative?.thumbnail_url || `/image_${imageIndex}.jpeg`} alt="narrative image" width={500} height={200} className="rounded-sm grayscale hover:grayscale-0 mb-1" />
+                                    <h2 className="text-lg line-clamp-1">{trail.name || "Untitled"}</h2>
+                                    <p className="text-sm">{formatLocalDate(trail.created_at)}</p>
+                                    {/* <p className="overflow-hidden line-clamp-4 flex-grow">{trail.summary || "A meandering and lovely trail through your notes"}</p> */}
+                                </div>
+                            </li>)
+                        })
+                    }
+                </ul>
+            </div>
         </div>
     );
 }

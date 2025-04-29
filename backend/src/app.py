@@ -203,8 +203,9 @@ def create_trail(trailRequest: TrailRequest):
             narrative_data["references"] = [
                 {"id": ref.id, "text": ref.text} for ref in narrative.references
             ]
+            image_id = random.randint(1, 10)
             narrative_data["thumbnail_url"] = (
-                "/public/narrative_image.png"  # TODO: Generate thumbnail
+                f"/public/image_{image_id}.jpeg"  # TODO: Generate thumbnail
             )
             logfire.info("Narrative generated successfully. Saving...")
 
