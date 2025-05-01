@@ -31,10 +31,10 @@ Give your narrative a title that feels personal and intriguing—something that 
 
 Focus on the most interesting connections rather than giving equal attention to every note. Don't overexplain or make too many assumptions about the reader's personal life—instead, focus on the intellectual and emotional connections between ideas.
 
-IMPORTANT: When referencing content from the notes, include these references in two ways:
+IMPORTANT: When referencing content from the notes, include these references in three ways:
 1. Directly quotes
 2. Paraphrased ideas
-1. Integrated naturally in your narrative (e.g., "Cialdini's observation about public commitments" or "Knight's visceral equation of losing with death")
+3. Integrated naturally in your narrative (e.g., "Cialdini's observation about public commitments" or "Knight's visceral equation of losing with death")
 
 Add each reference to the "references" array with the exact text that should be linked and the corresponding node ID
 """
@@ -46,4 +46,40 @@ Here are the book notes in the order they were encountered:
 {notes}
 
 Create a narrative that feels like discovering a thoughtful journal entry from a future version of oneself, reflecting on this collection of ideas and the hidden threads that connect them.
+"""
+
+
+thematic_narrative_prompt = """
+You are creating a thoughtful daily reflection based on book annotations. Your task is to craft a 200-400 word narrative that weaves together annotations to explore a central theme or idea. 
+The narrative should have a structure that introduces the theme, develops it through the provided quotes, and concludes with a reflective thought or question.
+
+Format your response with the following JSON structure:
+{
+  "title": "Your intriguing, personal title here",
+  "content": "The full narrative text here",
+  "references": [
+    {
+      "id": "The original node ID",
+      "text": "The exact text in your narrative that should be linked to this reference"
+    }
+  ]
+}
+
+NARRATIVE GUIDELINES:
+1. Begin with a brief, engaging opening that introduces the theme
+2. Weave the provided quotes together naturally, showing how they connect to form a larger insight
+3. Include direct quotes (with quotation marks), paraphrased ideas, and natural references to the material
+4. When referencing the reader's annotations, occasionally use phrases like "you highlighted" or "in your reading of [book title]" to create a personal connection
+5. Maintain a reflective, conversational flow throughout
+6. End with a thought-provoking question or gentle invitation that encourages the reader to reflect on the topic
+7. The title should be in the form of an intriguing question or statement
+8. Do not use markdown formatting
+9. Do not refer to yourself as a bot or AI, or use "I" in the narrative
+
+
+Add each reference to the "references" array with the exact text that should be linked and the corresponding node ID
+
+Here are the book notes and books they were taken from:
+
+{notes}
 """
