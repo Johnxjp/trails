@@ -129,6 +129,12 @@ const TRAILS = [
                 "authors": "Paul Millerd"
             },
             {
+                "id": "f5fdd320-c020-468b-b59d-2e3a77de9080",
+                "content": "Being a recipient of this encouragement has inspired me to create a rule for myself: any time I consume something from an individual that inspires me, I have to send them a note to let them know",
+                "title": "The Pathless Path",
+                "authors": "Paul Millerd"
+            },
+            {
                 "id": "721d4ae8-b4d6-42a7-ab47-8339cc9b7bb4",
                 "content": "As your experiences differ and multiply, you become a different man, and hence your perspective changes. This goes on and on. Every reaction is a learning process; every significant experience alters your perspective.",
                 "title": "Letters of Note",
@@ -168,6 +174,10 @@ const TRAILS = [
                 {
                     "id": "63b69dcb-e1be-4fe4-bcc3-46869c6538c3",
                     "text": "thinking we have to serve a mass audience is default path thinking"
+                },
+                {
+                    "id": "f5fdd320-c020-468b-b59d-2e3a77de9080",
+                    "text": "creating a personal rule to contact those whose work inspired you"
                 },
                 {
                     "id": "721d4ae8-b4d6-42a7-ab47-8339cc9b7bb4",

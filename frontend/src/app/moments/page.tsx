@@ -1,7 +1,7 @@
 "use client";
 
 import { Trail } from "@/lib/types";
-import { getTrailData } from "@/app/trails/lib/getTrailData";
+import { getTrailData } from "@/app/moments/lib/getTrailData";
 
 import Image from "next/image";
 import { useRouter } from 'next/navigation'
@@ -32,16 +32,15 @@ export default function TrailHistoryPage() {
     return (
         <div className="mx-auto w-screen h-screen px-1 md:px-2 flex flex-col">
             <div className="max-w-7xl mx-auto mt-10">
-                <h1 className="w-full text-lg font-satoshi font-semibold my-2 p-1">Past Explorations</h1>
+                <h1 className="w-full text-3xl font-satoshi text-center font-semibold my-5 pb-5">Moments of Discovery</h1>
                 <ul className="grid w-full grid-cols-3">
                     {trailHistory
                         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                         .map((trail: Trail, i: number) => {
-                            const imageIndex = Math.floor(Math.random() * 11) + 1;
-                            return (<li key={i} onClick={() => router.push(`/trails/${trail.id}`)}>
+                            return (<li key={i} onClick={() => router.push(`/moments/${trail.id}`)}>
                                 <div key={i} className="hover:cursor-pointer flex flex-col rounded-lg p-1 mb-2">
                                     {/* TODO: Image Thumbnail needs changing */}
-                                    <Image src={trail.narrative?.thumbnail_url || `/image_${imageIndex}.jpeg`} alt="narrative image" width={500} height={200} className="rounded-sm grayscale hover:grayscale-0 mb-1" />
+                                    <Image src={trail.narrative?.thumbnail_url || `/image_${12}.jpeg`} alt="narrative image" width={500} height={200} className="rounded-sm opacity-30 hover:opacity-100 mb-1" />
                                     <h2 className="text-lg line-clamp-1">{trail.name || "Untitled"}</h2>
                                     <p className="text-sm">{formatLocalDate(trail.created_at)}</p>
                                     {/* <p className="overflow-hidden line-clamp-4 flex-grow">{trail.summary || "A meandering and lovely trail through your notes"}</p> */}
