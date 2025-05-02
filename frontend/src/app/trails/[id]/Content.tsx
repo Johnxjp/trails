@@ -3,14 +3,14 @@
 import { useState } from "react";
 import Image from "next/image";
 
-import { Annotation, Trail } from "@/lib/types";
+import { Nodes, Trail } from "@/lib/types";
 import { formatLocalDate } from "@/lib/utils";
 // import { AnnotationPanel } from "./AnnotationPanel";
 import InteractiveText from "@/components/InteractiveText";
 
 export default function Content({ data }: { data: Trail }) {
 
-    const [clickedAnnotation, setClickedAnnotation] = useState<Annotation | null>(null);
+    const [clickedAnnotation, setClickedAnnotation] = useState<Nodes | null>(null);
     console.log('Nodes:', data.nodes);
 
     function handleAnnotationClick(annotationId: string) {
@@ -23,7 +23,7 @@ export default function Content({ data }: { data: Trail }) {
     }
 
     return (
-        <div className="max-w-5xl">
+        <div className="max-w-5xl py-5">
             <div className="flex flex-col justify-left w-full px-4 my-4">
                 <h1 className="font-semibold text-2xl text-black">{data.narrative?.title || data.name || "Untitled"}</h1>
                 <p>{formatLocalDate(data.created_at)}</p>

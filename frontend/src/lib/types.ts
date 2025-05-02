@@ -23,10 +23,17 @@ export type Narrative = {
     thumbnail_url: string | null;
 }
 
+export type Nodes = {
+    id: string;
+    title: string;
+    authors: string | null;
+    content: string;
+}
+
 export type Trail = {
     id: string;
     name: string;
-    nodes: Annotation[];
+    nodes: Nodes[];
     created_at: string;
     narrative_id: string;
     narrative: Narrative | null;

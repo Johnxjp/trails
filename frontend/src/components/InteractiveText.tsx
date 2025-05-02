@@ -2,11 +2,12 @@
 
 import { JSX } from "react";
 
-import Markdown from "react-markdown";
-
 import { NarrativeReferences } from "@/lib/types";
 
 export default function InteractiveText({ text, references, onAnnotationClick }: { text: string; references: NarrativeReferences[], onAnnotationClick: (annotationId: string) => void }) {
+
+    console.log('Text:', text);
+    console.log('Text:', references);
 
     function renderText(text: string, references: NarrativeReferences[]) {
 
@@ -17,8 +18,15 @@ export default function InteractiveText({ text, references, onAnnotationClick }:
                 end: startIndex + reference.text.length,
                 id: reference.id,
             }
-        })
+        }).filter((index) => {
+            if (index.start === -1) {
+                console.log("Reference not found in text:", index);
+                return false;
+            }
+            return true;
+        });
         const sortedIndexes = indexes.sort((a, b) => a.start - b.start);
+        console.log("Sorted indexes:", sortedIndexes);
         const textElements: (string | JSX.Element)[] = [];
         let currentIndex = 0;
         sortedIndexes.forEach((index, i) => {
@@ -34,7 +42,7 @@ export default function InteractiveText({ text, references, onAnnotationClick }:
                 breaks.forEach((t, i) => {
                     textElements.push(t)
                     if (i !== breaks.length - 1) {
-                        textElements.push(<><br/><br/></>)
+                        textElements.push(<><br key={`br-1-${id}`} /><br key={`br-2-${id}`} /></>)
                     }
                 })
             };
@@ -42,12 +50,13 @@ export default function InteractiveText({ text, references, onAnnotationClick }:
 
             // Add the highlighted text
             textElements.push(
-                <span className="text-carmine-red/60 hover:text-carmine-red/100 underline cursor-pointer transition-opacity duration 200 ease-in" key={`annotation-${id}`} onClick={() => onAnnotationClick(id)}>
+                <span className="text-carmine-red/60 hover:text-carmine-red/100 underline cursor-pointer transition-opacity duration 200 ease-in" key={`annotation-${i}-${id}`} onClick={() => onAnnotationClick(id)}>
                     {text.slice(start, end)}
                 </span>
             );
 
             if (i === sortedIndexes.length - 1) {
+                console.log("end", end);
                 const remainingText = text.slice(end);
                 if (remainingText) {
                     textElements.push(remainingText);
