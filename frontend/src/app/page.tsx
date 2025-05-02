@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+// import { useState } from 'react';
 // import { FileUploader } from '@/components/FileImport';
-import { Annotation } from '@/lib/types';
-import { DataPanel } from '@/components/DataPanel';
+// import { Annotation } from '@/lib/types';
+// import { DataPanel } from '@/components/DataPanel';
 import Link from 'next/link';
 // import { DataGrid } from '@/components/DataGrid';
 // import { Trail } from '@/components/Trail';
@@ -12,7 +12,7 @@ export default function Home() {
 
   // const [inputValue, setInputValue] = useState('');
   // const [data, setData] = useState<Annotation[]>([]);
-  const [trailNodes, setTrailNodes] = useState<Annotation[]>([]);
+  // const [trailNodes, setTrailNodes] = useState<Annotation[]>([]);
   // const [trailSaving, setTrailSaving] = useState(false);
   // const [trailSaved, setTrailSaved] = useState(false);
 
@@ -42,21 +42,21 @@ export default function Home() {
   //   console.log('Trail nodes updated:', trailNodes);
   // }, [trailNodes]);
 
-  function updateTrailNodes(annotation: Annotation, panelIndex: number) {
-    // Check if panelIndex is equal to length of trailNodes. If so append the annotation to the end of the array
-    // Otherwise, break the trail at the index of the panelIndex and insert the annotation
-    if (panelIndex === trailNodes.length) {
-      console.log('Appending to end of trail nodes');
-      const newTrailNodes = [...trailNodes, annotation];
-      console.log('New trail nodes:', newTrailNodes);
-      setTrailNodes(newTrailNodes);
-    } else {
-      console.log('Changing branch at index:', panelIndex);
-      const newTrailNodes = [...trailNodes.slice(0, panelIndex), annotation];
-      setTrailNodes(newTrailNodes);
-    }
-    // setTrailSaved(false);
-  }
+  // function updateTrailNodes(annotation: Annotation, panelIndex: number) {
+  //   // Check if panelIndex is equal to length of trailNodes. If so append the annotation to the end of the array
+  //   // Otherwise, break the trail at the index of the panelIndex and insert the annotation
+  //   if (panelIndex === trailNodes.length) {
+  //     console.log('Appending to end of trail nodes');
+  //     const newTrailNodes = [...trailNodes, annotation];
+  //     console.log('New trail nodes:', newTrailNodes);
+  //     setTrailNodes(newTrailNodes);
+  //   } else {
+  //     console.log('Changing branch at index:', panelIndex);
+  //     const newTrailNodes = [...trailNodes.slice(0, panelIndex), annotation];
+  //     setTrailNodes(newTrailNodes);
+  //   }
+  //   setTrailSaved(false);
+  // }
 
   // async function handleSubmit() {
   //   console.log(inputValue);
