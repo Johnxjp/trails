@@ -3,9 +3,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export function FileUploader() {
-    const [uploading, setUploading] = useState(false);
-    const [uploadComplete, setUploadComplete] = useState(false);
-    const [error, setError] = useState(null);
+    const [uploading, setUploading] = useState<boolean>(false);
+    const [uploadComplete, setUploadComplete] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
     const router = useRouter();
 
     async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -14,7 +14,7 @@ export function FileUploader() {
         if (!file) return;
 
         // Reset states
-        setError(null);
+        setError(false);
         setUploadComplete(false);
         setUploading(true);
 
@@ -34,9 +34,10 @@ export function FileUploader() {
             }
             setUploadComplete(true);
             router.refresh();
-        } catch (err) {
+        } catch (err: unknown) {
             console.error('Error uploading file:', err);
-            setError(err.detail);
+            setError(true);
+            setUploadComplete(false);
         } finally {
             setUploading(false);
         }
@@ -64,7 +65,7 @@ export function FileUploader() {
                 {uploading ? 'Processing...' : 'Choose File'}
             </button>
 
-            {error && <div className="error">{error}</div>}
+            {error && <div className="error">Error uploading file</div>}
             {uploadComplete && <div className="success">Upload complete!</div>}
         </div >
     );

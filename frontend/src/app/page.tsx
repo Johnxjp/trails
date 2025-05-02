@@ -9,11 +9,11 @@ import { DataPanel } from '@/components/DataPanel';
 
 export default function Home() {
 
-  const [inputValue, setInputValue] = useState('');
+  // const [inputValue, setInputValue] = useState('');
   // const [data, setData] = useState<Annotation[]>([]);
   const [trailNodes, setTrailNodes] = useState<Annotation[]>([]);
-  const [trailSaving, setTrailSaving] = useState(false);
-  const [trailSaved, setTrailSaved] = useState(false);
+  // const [trailSaving, setTrailSaving] = useState(false);
+  // const [trailSaved, setTrailSaved] = useState(false);
 
   // useEffect(() => {
   //   async function getAnnotations() {
@@ -54,98 +54,98 @@ export default function Home() {
       const newTrailNodes = [...trailNodes.slice(0, panelIndex), annotation];
       setTrailNodes(newTrailNodes);
     }
-    setTrailSaved(false);
+    // setTrailSaved(false);
   }
 
-  async function handleSubmit() {
-    console.log(inputValue);
-    if (inputValue.length === 0) {
-      console.log('Input is empty');
-      return;
-    }
-    try {
-      const url = new URL(`http://localhost:8000/search`);
-      url.searchParams.append('query', inputValue);
-      const data = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+  // async function handleSubmit() {
+  //   console.log(inputValue);
+  //   if (inputValue.length === 0) {
+  //     console.log('Input is empty');
+  //     return;
+  //   }
+  //   try {
+  //     const url = new URL(`http://localhost:8000/search`);
+  //     url.searchParams.append('query', inputValue);
+  //     const data = await fetch(url, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     });
 
-      if (data.ok) {
-        const json = await data.json();
-        console.log(json);
-      } else {
-        console.log('Error: ', data.statusText);
-      }
-    } catch (error) {
-      console.error('Error: ', error);
-    }
-    setInputValue('');
-  }
+  //     if (data.ok) {
+  //       const json = await data.json();
+  //       console.log(json);
+  //     } else {
+  //       console.log('Error: ', data.statusText);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error: ', error);
+  //   }
+  //   setInputValue('');
+  // }
 
-  function resetTrail() {
-    console.log('Resetting trail nodes');
-    setTrailSaved(false);
-    setTrailNodes([]);
-  }
+  // function resetTrail() {
+  //   console.log('Resetting trail nodes');
+  //   setTrailSaved(false);
+  //   setTrailNodes([]);
+  // }
 
-  function breakTrail(trailItemId: string) {
-    console.log('Breaking trail at:', trailItemId);
-    const index = trailNodes.findIndex((node) => node.id === trailItemId);
-    if (index !== -1) {
-      const newTrailNodes = trailNodes.slice(0, index + 1);
-      setTrailNodes(newTrailNodes);
-    }
-  }
-  function removeFromTrailNodes(trailItemId: string) {
-    console.log('Removing from trail nodes:', trailItemId);
-    const newTrailNodes = trailNodes.filter((node) => node.id !== trailItemId);
-    setTrailNodes(newTrailNodes);
-  }
+  // function breakTrail(trailItemId: string) {
+  //   console.log('Breaking trail at:', trailItemId);
+  //   const index = trailNodes.findIndex((node) => node.id === trailItemId);
+  //   if (index !== -1) {
+  //     const newTrailNodes = trailNodes.slice(0, index + 1);
+  //     setTrailNodes(newTrailNodes);
+  //   }
+  // }
+  // function removeFromTrailNodes(trailItemId: string) {
+  //   console.log('Removing from trail nodes:', trailItemId);
+  //   const newTrailNodes = trailNodes.filter((node) => node.id !== trailItemId);
+  //   setTrailNodes(newTrailNodes);
+  // }
 
-  async function saveTrail() {
-    console.log('Saving trail nodes:', trailNodes);
-    const url = new URL(`http://localhost:8000/trail`);
-    const body = {
-      trail: trailNodes.map((node: Annotation) => ({
-        id: node.id,
-        title: node.title,
-        content: node.content,
-        authors: node.authors,
-      })),
-    }
-    try {
-      setTrailSaving(true)
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(body),
-      });
+  // async function saveTrail() {
+  //   console.log('Saving trail nodes:', trailNodes);
+  //   const url = new URL(`http://localhost:8000/trail`);
+  //   const body = {
+  //     trail: trailNodes.map((node: Annotation) => ({
+  //       id: node.id,
+  //       title: node.title,
+  //       content: node.content,
+  //       authors: node.authors,
+  //     })),
+  //   }
+  //   try {
+  //     setTrailSaving(true)
+  //     const response = await fetch(url, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(body),
+  //     });
 
-      if (response.ok) {
-        console.log('Trail saved successfully');
-        setTrailSaved(true);
-      } else {
-        console.error('Error saving trail:', response.statusText);
-      }
-      setTrailSaving(false)
-    }
-    catch (error) {
-      console.error('Error saving trail:', error);
-      setTrailSaving(false)
-    }
+  //     if (response.ok) {
+  //       console.log('Trail saved successfully');
+  //       setTrailSaved(true);
+  //     } else {
+  //       console.error('Error saving trail:', response.statusText);
+  //     }
+  //     setTrailSaving(false)
+  //   }
+  //   catch (error) {
+  //     console.error('Error saving trail:', error);
+  //     setTrailSaving(false)
+  //   }
 
-  }
+  // }
 
 
   return (
 
     <div className="flex flex-col h-screen w-screen justify-items-start">
-      <div>
+      {/* <div>
         <div className="w-full m-2 flex justify-end md:px-4 p-1 gap-2">
           <button className="
             inset-shadow-sm inset-shadow-slate-400/50 
@@ -162,7 +162,7 @@ export default function Home() {
             hover:text-white`} onClick={saveTrail}>{`${trailSaved ? 'saved' : trailSaving ? 'saving' : 'save'}`}
           </button>
         </div>
-      </div>
+      </div> */}
       {/* Seed Panel */}
       <div className="h-full flex flex-row w-full overflow-hidden overflow-x-auto scrollbar-thin">
         <DataPanel key={0} seedId={null} panelIndex={0} updateTrailNodes={updateTrailNodes} />
