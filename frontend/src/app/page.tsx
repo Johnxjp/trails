@@ -165,7 +165,7 @@ export default function Home() {
         </div>
       </div> */}
       {/* Seed Panel */}
-      <button className="border rounded p-2 m-2 w-110 hover:cursor-pointer"><Link href="/moments">Moments</Link></button>
+      <button className="border rounded p-2 m-2 w-109 hover:cursor-pointer"><Link href="/moments">Moments</Link></button>
       {/* <div className="h-full flex flex-row w-full overflow-hidden overflow-x-auto scrollbar-thin"> */}
         {/* <DataPanel key={0} seedId={null} panelIndex={0} updateTrailNodes={updateTrailNodes} />
         {
