@@ -40,7 +40,7 @@ export default function TrailHistoryPage() {
                             return (<li key={i} onClick={() => router.push(`/moments/${trail.id}`)}>
                                 <div key={i} className="hover:cursor-pointer flex flex-col rounded-lg p-1 mb-2">
                                     {/* TODO: Image Thumbnail needs changing */}
-                                    <Image src={trail.narrative?.thumbnail_url || `/image_${12}.jpeg`} alt="narrative image" width={500} height={200} className="rounded-sm opacity-30 hover:opacity-100 mb-1" />
+                                    <Image src={trail.narrative?.thumbnail_url || `/image_${12}.jpeg`} alt="narrative image" width={500} height={200} className="rounded-sm opacity-80 hover:opacity-100 mb-1" />
                                     <h2 className="text-lg line-clamp-1">{trail.name || "Untitled"}</h2>
                                     <p className="text-sm">{formatLocalDate(trail.created_at)}</p>
                                     {/* <p className="overflow-hidden line-clamp-4 flex-grow">{trail.summary || "A meandering and lovely trail through your notes"}</p> */}

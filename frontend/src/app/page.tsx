@@ -4,6 +4,7 @@ import { useState } from 'react';
 // import { FileUploader } from '@/components/FileImport';
 import { Annotation } from '@/lib/types';
 import { DataPanel } from '@/components/DataPanel';
+import Link from 'next/link';
 // import { DataGrid } from '@/components/DataGrid';
 // import { Trail } from '@/components/Trail';
 
@@ -144,7 +145,7 @@ export default function Home() {
 
   return (
 
-    <div className="flex flex-col h-screen w-screen justify-items-start">
+    <div className="flex flex-col h-screen w-screen justify-items-start mx-auto justify-center items-center">
       {/* <div>
         <div className="w-full m-2 flex justify-end md:px-4 p-1 gap-2">
           <button className="
@@ -164,8 +165,9 @@ export default function Home() {
         </div>
       </div> */}
       {/* Seed Panel */}
-      <div className="h-full flex flex-row w-full overflow-hidden overflow-x-auto scrollbar-thin">
-        <DataPanel key={0} seedId={null} panelIndex={0} updateTrailNodes={updateTrailNodes} />
+      <button className="border rounded p-2 m-2 w-115 hover:cursor-pointer"><Link href="/moments">Moments</Link></button>
+      {/* <div className="h-full flex flex-row w-full overflow-hidden overflow-x-auto scrollbar-thin"> */}
+        {/* <DataPanel key={0} seedId={null} panelIndex={0} updateTrailNodes={updateTrailNodes} />
         {
           trailNodes.map((annotation, index) => (
             console.log('Rendering trail node:', annotation),
@@ -175,10 +177,11 @@ export default function Home() {
               panelIndex={index + 1}
               updateTrailNodes={updateTrailNodes}
             />
-          ))
+          )) */}
 
-        }
-      </div>
+        {/* } */}
+        
+      {/* </div> */}
     </div>
   );
 }
