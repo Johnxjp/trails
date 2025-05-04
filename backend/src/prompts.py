@@ -41,15 +41,14 @@ Add each reference to the "references" array with the exact text that should be 
 )
 
 user_narrative_prompt = """
-Here are the book notes in the order they were encountered:
+Here are the book annotation in the order they were encountered:
 
-{notes}
-
-Create a narrative that feels like discovering a thoughtful journal entry from a future version of oneself, reflecting on this collection of ideas and the hidden threads that connect them.
+{annotations}
 """
 
 
-thematic_narrative_prompt = """
+thematic_narrative_prompt = escape_braces(
+    """
 You are creating a thoughtful daily reflection based on book annotations. Your task is to craft a 200-400 word narrative that weaves together annotations to explore a central theme or idea. 
 The narrative should have a structure that introduces the theme, develops it through the provided quotes, and concludes with a reflective thought or question.
 
@@ -59,27 +58,52 @@ Format your response with the following JSON structure:
   "content": "The full narrative text here",
   "references": [
     {
-      "id": "The original node ID",
+      "annotation_id": "The ID of the annotation. This is UUID4 format",
       "text": "The exact text in your narrative that should be linked to this reference"
     }
   ]
 }
 
+For example (with a shortened version of the narrative):
+{
+    "title": "Wandering Between Whistles and Inventions",
+    "content": "Looking back, I realize how curious the mind can be, akin to a spirited dance that intertwines disparate thoughts into a harmonious tune. .... <narrative continues>",
+    "references": [
+        {
+            "annotation_id": "c6069117-f5d2-41d8-ae51-e2ed8db1a267",
+            "text": "I realize how curious the mind can be"
+        },
+        {
+            "annotation_id": "d1dfdd35-c67e-4231-bee6-cddf9b39b4cb",
+            "text": "intertwines disparate thoughts"
+        }
+    ]
+}
+
+
 NARRATIVE GUIDELINES:
-1. Begin with a brief, engaging opening that introduces the theme
-2. Weave the provided quotes together naturally, showing how they connect to form a larger insight
-3. Include direct quotes (with quotation marks), paraphrased ideas, and natural references to the material
-4. When referencing the reader's annotations, occasionally use phrases like "you highlighted" or "in your reading of [book title]" to create a personal connection
-5. Maintain a reflective, conversational flow throughout
-6. End with a thought-provoking question or gentle invitation that encourages the reader to reflect on the topic
-7. The title should be in the form of an intriguing question or statement
-8. Do not use markdown formatting
-9. Do not refer to yourself as a bot or AI, or use "I" in the narrative
+1. The title should be in the form of an intriguing question or statement
+2. Begin with a brief, engaging opening that introduces the theme
+3. Weave the provided quotes together naturally, showing how they connect to form a larger insight
+4. Maintain a reflective, conversational flow throughout
+5. End with a thought-provoking question or gentle invitation that encourages the reader to reflect on the topic
+6. Do not use markdown formatting
+7. Do not refer to yourself as a bot or AI, or use "I" in the narrative
 
+REFERENCE GUIDELINES:
+1. Include direct quotes, paraphrased ideas, and natural references to the material
+2. Do not add use double quotation marks e.g. ""Cialdini's observation about public commitments"". Instead just quote "Cialdini's observation about public commitments"
+3. When referencing the reader's annotations, occasionally use phrases like "you highlighted" or "in your reading of [book title]" to create a personal connection
 
-Add each reference to the "references" array with the exact text that should be linked and the corresponding node ID
+Add each reference to the "references" array with the exact text that should be linked and the corresponding annotation ID
 
-Here are the book notes and books they were taken from:
-
-{notes}
+The format of the annotations is as follows:
+{
+  "id": "annotation ID. This is UUID4 format",
+  "title": "Book Title",
+  "authors": "authors separated by ';'",
+  "content": "The content of the annotation",
+  "date_annotated": "2023-10-01T00:00:00Z"
+}
 """
+)
