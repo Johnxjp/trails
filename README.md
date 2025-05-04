@@ -1,6 +1,6 @@
 # Reading Trails
 
-Over 10 years, I've accumulated a heap of annotations from the books I've read. I put this application together to produce a moment of curiosity in my day by generating a thematic post derived from all these annotations.
+Over 10 years, I've accumulated a heap of annotations from the books I've read. I put this application together to produce a moment of curiosity in my day by generating a thematic post derived from all these annotations. An demo version of this can be seen at https://trails-production.up.railway.app/moments.
 
 ![image](assets/moment_page.png)
 
