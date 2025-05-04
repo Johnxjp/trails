@@ -10,22 +10,21 @@ import { formatLocalDate } from "@/lib/utils";
 
 export default function MomentsPage() {
     const router = useRouter();
-    const [trailHistory, setTrailHistory] = useState<Narrative[]>([]);
+    const [narratives, setnarratives] = useState<Narrative[]>([]);
 
     useEffect(() => {
         async function getMomentsData() {
-            const trailHistory = await getMoments();
-            if (!trailHistory) {
+            const narratives = await getMoments();
+            if (!narratives) {
                 console.error('Failed to fetch trail history');
                 return;
             }
-            setTrailHistory(trailHistory);
+            setnarratives(narratives);
         }
         getMomentsData();
     }, []);
 
-    console.log('Trail history:', trailHistory);
-    if (trailHistory.length === 0) {
+    if (narratives.length === 0) {
         return <div className="mx-auto w-screen h-screen px-1 md:px-2 flex flex-col text-4xl text-slate-500 items-center justify-center">Go Explore!</div>;
     }
 
@@ -34,7 +33,7 @@ export default function MomentsPage() {
             <div className="max-w-7xl mx-auto mt-10">
                 <h1 className="w-full text-lg font-satoshi font-semibold my-2 p-1">Past Explorations</h1>
                 <ul className="grid w-full grid-cols-3">
-                    {trailHistory
+                    {narratives
                         .sort((a, b) => new Date(b.date_created).getTime() - new Date(a.date_created).getTime())
                         .map((narrative: Narrative, i: number) => {
                             const imageIndex = Math.floor(Math.random() * 11) + 1;

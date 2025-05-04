@@ -29,10 +29,10 @@ export default function InteractiveText({ text, references, onAnnotationClick }:
                 // Split the text into paragraphs
                 // and add them to the textElements array
                 const breaks = spanText.split(/\n\n/)
-                breaks.forEach((t, i) => {
+                breaks.forEach((t, j) => {
                     textElements.push(t)
-                    if (i !== breaks.length - 1) {
-                        textElements.push(<><br/><br/></>)
+                    if (j !== breaks.length - 1) {
+                        textElements.push(<span key={`break-${j}-${i}`}><br key={`break-br-${i}-1`}/><br key={`break-br-${i}-2`}/></span>)
                     }
                 })
             };
@@ -40,7 +40,7 @@ export default function InteractiveText({ text, references, onAnnotationClick }:
 
             // Add the highlighted text
             textElements.push(
-                <span className="text-carmine-red/60 hover:text-carmine-red/100 underline cursor-pointer transition-opacity duration 200 ease-in" key={`annotation-${id}`} onClick={() => onAnnotationClick(id)}>
+                <span className="text-carmine-red/60 hover:text-carmine-red/100 underline cursor-pointer transition-opacity duration 200 ease-in" key={`annotation-${id}-${i}`} onClick={() => onAnnotationClick(id)}>
                     {text.slice(start, end)}
                 </span>
             );
