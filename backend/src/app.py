@@ -16,6 +16,7 @@ import logfire
 
 import src.file_handlers as fh
 from src.narrative import generate_narrative
+from src.schemas import NarrativeRecord
 from src.utils import get_current_utc_time
 
 logfire.configure(send_to_logfire=True)
@@ -60,6 +61,19 @@ def retrieve_annotations(size: int = 5):
     indexes = [random.randrange(n_annos) for _ in range(size)]
     choices = [annotations[i] for i in indexes]
     return {"annotations": choices}
+
+
+@app.get("/annotations/{annotation_id}")
+def retrieve_annotation(annotation_id: str):
+    """Endpoint to retrieve a specific annotation."""
+    with open("./data/annotations.json", "r") as f:
+        annotations = json.load(f)
+
+    for annotation in annotations:
+        if annotation["id"] == annotation_id:
+            return annotation
+
+    raise HTTPException(status_code=404, detail="Annotation not found.")
 
 
 @app.get("/annotations/{annotation_id}/related")
@@ -204,9 +218,7 @@ def create_trail(trailRequest: TrailRequest):
                 {"id": ref.id, "text": ref.text} for ref in narrative.references
             ]
             image_id = random.randint(1, 10)
-            narrative_data["thumbnail_url"] = (
-                f"/image_{image_id}.jpeg"  # TODO: Generate thumbnail
-            )
+            narrative_data["thumbnail_url"] = f"/image_{image_id}.jpeg"  # TODO: Generate thumbnail
             logfire.info("Narrative generated successfully. Saving...")
 
             narratives = []
@@ -284,3 +296,27 @@ def get_trails():
         trails = json.load(f)
 
     return trails
+
+
+@app.get("/narratives")
+def get_narratives() -> list[NarrativeRecord]:
+    """
+    Endpoint to retrieve all narratives.
+    Need to join with the annotations to get the references
+    """
+    with open("./data/narratives.json", "r") as f:
+        narratives = json.load(f)
+
+    return narratives
+
+
+@app.get("/narratives/{narrative_id}")
+def get_narrative(narrative_id: str) -> NarrativeRecord:
+    """Endpoint to retrieve a single narratives"""
+    with open("./data/narratives.json", "r") as f:
+        narratives = json.load(f)
+
+    for narrative in narratives:
+        if narrative["id"] == narrative_id:
+            return narrative
+    raise HTTPException(status_code=404, detail="Narrative not found.")

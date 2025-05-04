@@ -2,8 +2,6 @@
 
 import { JSX } from "react";
 
-import Markdown from "react-markdown";
-
 import { NarrativeReferences } from "@/lib/types";
 
 export default function InteractiveText({ text, references, onAnnotationClick }: { text: string; references: NarrativeReferences[], onAnnotationClick: (annotationId: string) => void }) {
@@ -15,7 +13,7 @@ export default function InteractiveText({ text, references, onAnnotationClick }:
             return {
                 start: startIndex,
                 end: startIndex + reference.text.length,
-                id: reference.id,
+                id: reference.annotation_id,
             }
         })
         const sortedIndexes = indexes.sort((a, b) => a.start - b.start);

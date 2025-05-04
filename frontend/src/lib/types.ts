@@ -11,7 +11,8 @@ export type Annotation = {
 }
 
 export type NarrativeReferences = {
-    id: string;  // annotation id referenced in the narrative
+    id: string;  // id
+    annotation_id: string; // annotation id
     text: string; // text in the narrative
 }
 
@@ -21,6 +22,7 @@ export type Narrative = {
     content: string;
     references: NarrativeReferences[];
     thumbnail_url: string | null;
+    date_created: string;
 }
 
 export type Trail = {
