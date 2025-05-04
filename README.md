@@ -12,6 +12,12 @@ The frontend displays all generated entries in the Moments tab in a grid display
 
 Each individual entry contains the post plus a set of references which can be clicked to showcase the original annotation these are based on.
 
+## Trails
+On the `Explore` tab there is some functionality built to explore annotations in a sequential way. A subset of annotations is shown and by clicking on one, another subset is revealed. 
+
+![image](./assets/explore.png)
+
+*Note: There is not logic yet though to relate each subsequent layer*
 
 ## How to run
 The annotations were downloaded from Readwise, however, there is functionality to process the Kindle's My Clippings file. The results are not as clean as the Readwise export however. The script for processing the Readwise CSV is located at `./backend/scripts/import_readwise.py`.
