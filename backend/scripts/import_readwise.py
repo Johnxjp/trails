@@ -19,12 +19,14 @@ def parser():
         "--readwise-file",
         type=str,
         required=True,
+        default="./data/readwise.csv",  # Run from root
         help="CSV export of data from readwise",
     )
     parser.add_argument(
         "--db-location",
         type=str,
         required=True,
+        default="./data/annotations.json",  # Run from root
         help="Location of JSON database to import into",
     )
     parser.add_argument(
