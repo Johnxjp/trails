@@ -21,13 +21,24 @@ On the `Explore` tab there is some functionality built to explore annotations in
 
 ## How to run
 
-### Generate Annotations Database
-The annotations were downloaded from Readwise, however, there is functionality to process the Kindle's My Clippings file. The results are not as clean as the Readwise export however. The script for processing the Readwise CSV is located at `./backend/scripts/import_readwise.py`.
-
-For simplicity sake, JSON files were used to act as a database.
-
 ### Frontend
 `npm run dev` or build and run with `npm run build` and then `npm run start`.
 
 ### Backend
 The backend is Python based and uses `uv` to manage the project. Use `uv init` to synchronise the local repo and then `uv run fastapi dev src/app.py` from the backend root.
+
+#### Generate Annotations Database
+The annotations were downloaded from Readwise, however, there is functionality to process the Kindle's My Clippings file. The results are not as clean as the Readwise export however. The script for processing the Readwise CSV is located at `./backend/scripts/import_readwise.py`. For simplicity sake, JSON files were used to act as a database. Run manually with
+
+```
+uv run python -m scripts.import_readwise --readwise-file ../data/readwise-data-may-2025.csv --db-location ./data/annotations_readwise.json
+```
+
+#### Generate Narrative
+Script at `./backend/scripts/generate_narrative.py` can be used to generate the daily narrative. By default it uses `gpt-4o-mini` for the generation. Run manually with
+
+```
+uv run python -m scripts.generate_narrative --annotations_db ./data/annotations.json --frequency_stats_location ./data/frequency_stats.json --narrative_db ./data/narratives.json
+```
+
+In theory, you can run a cronjob to get this to run every day. 
