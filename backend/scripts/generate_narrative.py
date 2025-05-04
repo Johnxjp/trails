@@ -158,6 +158,7 @@ def main():
                 break
 
     selected_annotations.extend(frequency_annotations)
+    selected_annotations_ids = [annotation["id"] for annotation in selected_annotations]
     logfire.info(f"Selected {len(selected_annotations)} annotations for narrative generation.")
     logfire.info(
         f"Selected annotation ids: {[annotation["id"] for annotation in selected_annotations]}"
@@ -192,7 +193,21 @@ def main():
         logfire.error(f"Error generating narrative: {e}")
         return
 
-    # Validation done by magentic
+    # Filter references not in selected annotations
+    references = []
+    for reference in narrative.references:
+        if reference.annotation_id not in selected_annotations_ids:
+            logfire.info(
+                f"Reference {reference.annotation_id} not in selected annotations. Skipping."
+            )
+            continue
+
+        record = ReferenceRecord(
+            id=str(uuid4()),
+            annotation_id=reference["annotation_id"],
+            text=reference["text"],
+        )
+        references.append(record)
 
     # Create narrative record object
     thumbnail_url = f"/image_{random.randint(1, 13)}.jpeg"
@@ -200,14 +215,7 @@ def main():
         id=str(uuid4()),
         title=narrative.title,
         content=narrative.content,
-        references=[
-            ReferenceRecord(
-                id=str(uuid4()),
-                annotation_id=reference.annotation_id,
-                text=reference.text,
-            )
-            for reference in narrative.references
-        ],
+        references=references,
         thumbnail_url=thumbnail_url,
         date_created=datetime.now().isoformat(),
     )
