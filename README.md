@@ -20,6 +20,8 @@ On the `Explore` tab there is some functionality built to explore annotations in
 *Note: There is not logic yet though to relate each subsequent layer*
 
 ## How to run
+
+### Generate Annotations Database
 The annotations were downloaded from Readwise, however, there is functionality to process the Kindle's My Clippings file. The results are not as clean as the Readwise export however. The script for processing the Readwise CSV is located at `./backend/scripts/import_readwise.py`.
 
 For simplicity sake, JSON files were used to act as a database.
