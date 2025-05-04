@@ -201,6 +201,9 @@ def is_valid_annotation(annotation: RawBookAnnotation) -> bool:
     if len(annotation.content) == 0:
         return False
 
+    if "<You have reached the clipping limit for this item>" in annotation.content:
+        return False
+
     # ignore clips with no title
     if not annotation.title:
         return False
