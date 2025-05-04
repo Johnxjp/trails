@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 
 export function DataPanel({ seedId, panelIndex, updateTrailNodes }: { seedId: string | null, panelIndex: number, updateTrailNodes: (annotation: Annotation, panelIndex: number) => void }) {
 
-    console.log('DataPanel seedId:', seedId);
     const [selectedAnnotation, setSelectedAnnotation] = useState<Annotation | null>(null);
     const [candidateAnnotations, setCandidateAnnotations] = useState<Annotation[]>([]);
     const [isVisible, setIsVisible] = useState(false);

@@ -8,16 +8,12 @@ export default async function TrailItemPage({ params }: {
 }) {
     // Gets the trail ID from the URL
     const { id } = await params;
-    console.log('Trail ID:', id);
     const narrative: Narrative | null = await getMomentById(id);
-    console.log('Narrative data:', narrative);
 
     // Get all unique annotation IDs referenced in the narrative
     const annotation_ids = narrative?.references.map((reference) => reference.annotation_id);
-    console.log('Annotation IDs:', annotation_ids);
     // Get all unique annotation IDs referenced in the narrative
     const uniqueAnnotationIds = Array.from(new Set(annotation_ids));
-    console.log('Unique Annotation IDs:', uniqueAnnotationIds);
     // Get all annotations referenced in the narrative
     const referenced_annotations = await Promise.all(
         uniqueAnnotationIds.map(async (annotationId) => {
