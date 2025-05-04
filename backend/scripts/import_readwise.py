@@ -6,6 +6,7 @@ from uuid import uuid4
 
 import logfire
 
+from src.schemas import BookAnnotationType
 from src.file_handlers import readwise
 
 logfire.configure(send_to_logfire=False)
@@ -32,11 +33,15 @@ def parser():
         default=40,
         help="Minimum number of characters in an annotation to be imported",
     )
-
     parser.add_argument(
         "--overwrite",
         action="store_true",
         help="Overwrite existing database if it exists",
+    )
+    parser.add_argument(
+        "--include-comments",
+        action="store_true",
+        help="Add user comments to the database",
     )
     return parser.parse_args()
 
@@ -48,6 +53,7 @@ def main():
     db_location = args.db_location
     overwrite_db = args.overwrite
     min_annotation_chars = args.min_annotation_chars
+    include_comments = args.include_comments
 
     # Check if the database exists
     try:
@@ -84,6 +90,9 @@ def main():
     # Add UUIDs to the annotations and append to the database
     #
     for annotation in processed_annotations:
+        if annotation.annotation_type == BookAnnotationType.COMMENT and not include_comments:
+            continue
+
         record = {
             "id": str(uuid4()),
             "title": annotation.title,
