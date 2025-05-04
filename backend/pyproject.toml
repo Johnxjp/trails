@@ -8,6 +8,14 @@ dependencies = [
     "fastapi[standard]>=0.115.12",
     "logfire>=3.14.1",
     "magentic>=0.39.3",
+    "pandas>=2.2.3",
     "python-dotenv>=1.1.0",
     "pytz>=2025.2",
+    "tqdm>=4.67.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipython>=9.2.0",
+    "jupyter>=1.1.1",
 ]
