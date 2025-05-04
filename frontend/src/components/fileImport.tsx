@@ -34,9 +34,9 @@ export function FileUploader() {
             }
             setUploadComplete(true);
             router.refresh();
-        } catch (err) {
+        } catch (err: unknown) {
             console.error('Error uploading file:', err);
-            setError(err.detail);
+
         } finally {
             setUploading(false);
         }
