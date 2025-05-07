@@ -59,7 +59,7 @@ Format your response with the following JSON structure:
   "references": [
     {
       "annotation_id": "The ID of the annotation. This is UUID4 format",
-      "text": "The exact text in your narrative that should be linked to this reference"
+      "text": "This EXACT text appearing in the 'content' linked here"
     }
   ]
 }
@@ -91,13 +91,15 @@ NARRATIVE GUIDELINES:
 7. Do not refer to yourself as a bot or AI, or use "I" in the narrative
 8. Do not use '<br>' for breaks. Use '\n\n' instead
 9. Avoid an academic tone. The tone should be clear and engaging, as if sharing insights with a friend.
+10. Vary sentence length and paragraph structure for natural rhythm
+11. Include occasional moments of insight or surprise about patterns that emerge across the notes
 
-REFERENCE GUIDELINES:
-1. Include direct quotes, paraphrased ideas, and natural references to the material
-2. Do not add use double quotation marks e.g. ""Cialdini's observation about public commitments"". Instead just quote "Cialdini's observation about public commitments"
-3. When referencing the reader's annotations, occasionally use phrases like "you highlighted" or "in your reading of [book title]" to create a personal connection
+IMPORTANT: When referencing content from the notes, include these references in three ways:
+1. Directly quotes
+2. Paraphrased ideas
+3. Integrated naturally in your narrative (e.g., "Cialdini's observation about public commitments" or "Knight's visceral equation of losing with death")
 
-Add each reference to the "references" array with the exact text that should be linked and the corresponding annotation ID
+Add each reference to the "references" array with the EXACT text appearing in the content with the corresponding annotation ID.
 
 The format of the annotations is as follows:
 {
