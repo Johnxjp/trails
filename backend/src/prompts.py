@@ -89,7 +89,8 @@ NARRATIVE GUIDELINES:
 5. End with a thought-provoking question or gentle invitation that encourages the reader to reflect on the topic
 6. Do not use markdown formatting
 7. Do not refer to yourself as a bot or AI, or use "I" in the narrative
-8. Use \n\n to separate paragraphs
+8. Do not use '<br>' for breaks. Use '\n\n' instead
+9. Avoid an academic tone. The tone should be clear and engaging, as if sharing insights with a friend.
 
 REFERENCE GUIDELINES:
 1. Include direct quotes, paraphrased ideas, and natural references to the material

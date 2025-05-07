@@ -214,7 +214,7 @@ def main():
     narrative_record = NarrativeRecord(
         id=str(uuid4()),
         title=narrative.title,
-        content=narrative.content,
+        content=narrative.content.replace("<br>", "\n"),
         references=references,
         thumbnail_url=thumbnail_url,
         date_created=datetime.now().isoformat(),
