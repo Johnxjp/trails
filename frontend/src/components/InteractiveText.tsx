@@ -9,13 +9,23 @@ export default function InteractiveText({ text, references, onAnnotationClick }:
     function renderText(text: string, references: NarrativeReferences[]) {
 
         const indexes = references.map((reference) => {
+            // Algorithm is wrong. Inserts text in the wrong place
+            // Also what if the text is not found?
+            // Also what if multiple references are found?
             const startIndex = text.indexOf(reference.text);
             return {
                 start: startIndex,
                 end: startIndex + reference.text.length,
                 id: reference.annotation_id,
+                text: reference.text,
             }
-        })
+        }).filter((index) => {
+            if (index.start === -1) {
+                console.log("Reference not found in text:", index);
+                return false;
+            }
+            return true;
+        });
         const sortedIndexes = indexes.sort((a, b) => a.start - b.start);
         const textElements: (string | JSX.Element)[] = [];
         let currentIndex = 0;
@@ -32,7 +42,7 @@ export default function InteractiveText({ text, references, onAnnotationClick }:
                 breaks.forEach((t, j) => {
                     textElements.push(t)
                     if (j !== breaks.length - 1) {
-                        textElements.push(<span key={`break-${j}-${i}`}><br key={`break-br-${i}-1`}/><br key={`break-br-${i}-2`}/></span>)
+                        textElements.push(<span key={`break-${j}-${i}`}><br key={`break-br-${i}-1`} /><br key={`break-br-${i}-2`} /></span>)
                     }
                 })
             };
