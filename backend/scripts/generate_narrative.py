@@ -87,7 +87,7 @@ def parser():
 #     return True
 
 
-def retry_generate_narrative(annotations: str, retries: int = 3) -> Any:
+def retry_generate_narrative(annotations: str, retries: int = 3) -> ModelOutputNarrative:
     """
     Retry generating a narrative with exponential backoff.
 
@@ -204,8 +204,8 @@ def main():
 
         record = ReferenceRecord(
             id=str(uuid4()),
-            annotation_id=reference["annotation_id"],
-            text=reference["text"],
+            annotation_id=reference.annotation_id,
+            text=reference.text,
         )
         references.append(record)
 
